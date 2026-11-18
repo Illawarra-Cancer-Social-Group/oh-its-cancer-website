@@ -37,8 +37,12 @@
   /* ---------- Fonts ---------- */
   /* The font files and their licences are set up in fonts.css. The names
      after the first are fallbacks, used until the font loads. */
-  /* Display / marquee: large headings only. May be swapped for a paid font later. */
-  --font-display: 'Federo', Georgia, 'Times New Roman', serif;
+  /* Display / marquee: large headings only.
+     Curve Retro is the chosen font, but only a personal-use copy exists, so it
+     isn't in this repo: it only shows on a computer that has it installed.
+     Everyone else sees Fraunces. Once Curve Retro is bought with a web licence,
+     add its .woff2 to public/fonts/ and an @font-face rule in fonts.css. */
+  --font-display: 'Curve Retro', 'Fraunces', Georgia, 'Times New Roman', serif;
   /* Script: large headings and decorative words only. Never body text, links, buttons, labels or navigation. */
   --font-script: 'Yellowtail', 'Brush Script MT', cursive;
   /* Body: everything else. Made for low vision readers (I, l and 1 are easy to tell apart). */
