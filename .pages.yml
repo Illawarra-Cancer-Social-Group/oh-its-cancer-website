@@ -2,7 +2,7 @@
 #
 # The same rules are in src/content.config.ts, which the build checks.
 # Keep the two files in sync (AGENTS.md, section 7).
-# Region and cost options are fixed. Ask Abby before changing them.
+# Region options are fixed. Ask Abby before changing them.
 #
 # Kept deliberately simple, so switching to another git-based CMS
 # (e.g. Sveltia CMS) stays easy if Pages CMS ever disappears.
@@ -111,12 +111,11 @@ content:
         options:
           values: [Illawarra, NSW, national, online]
 
-      - name: cost
-        label: Cost
-        type: select
-        required: true
-        options:
-          values: [free, paid, varies]
+      - name: free
+        label: Free
+        description: Tick if this is free. It shows as "Free" on the site. Leave unticked if it costs money or you're not sure.
+        type: boolean
+        default: false
 
       - name: phone
         label: Phone (optional)

@@ -241,7 +241,7 @@ Erin can add, rename and reorder categories herself. Each category belongs to on
 | `url` | text, must start with `https://` | yes | External link |
 | `category` | reference to a category | yes | Pages CMS reference field (dropdown with search) |
 | `region` | select: Illawarra, NSW, national, online | yes | |
-| `cost` | select: free, paid, varies | yes | |
+| `free` | true/false | no (defaults to false) | Ticked shows "Free" on the card. Unticked means paid or unknown, and shows nothing about cost |
 | `phone` | text | no | Rendered as a `tel:` link |
 | `email` | text | no | |
 | `logo` | image | no | |
@@ -249,7 +249,7 @@ Erin can add, rename and reorder categories herself. Each category belongs to on
 | `published` | true/false | yes | Unpublished listings never build |
 | `lastChecked` | date | yes | When the link and details were last confirmed |
 
-Region and cost options are fixed in code. Ask Abby before changing them.
+Region options are fixed in code. Ask Abby before changing them.
 
 The build must fail with a clear, plain-English message if a required field is missing, a URL is malformed or a listing points to a category that doesn't exist. Netlify then keeps the last working version live.
 
@@ -262,7 +262,8 @@ Each section page (Products, People, Connect) shows its listings grouped by cate
 **With JavaScript, a filter bar above the list:**
 - A search box (labelled "Search listings") matching name, summary and category as you type, with a short debounce.
 - Category filter as a group of checkboxes inside a `<fieldset>` with a `<legend>`.
-- Region and cost filters as labelled `<select>` elements.
+- Region filter as a labelled `<select>`.
+- A "Free only" checkbox with a visible label.
 - A results count in an `aria-live="polite"` region, for example "Showing 12 of 48 listings".
 - A "Clear filters" button.
 - A friendly no-results message that suggests clearing filters.
@@ -271,7 +272,7 @@ Each section page (Products, People, Connect) shows its listings grouped by cate
 - Category headings with no visible listings are hidden too.
 - Under about 500 listings per section, filter in the browser. Above that, revisit (pagination or Pagefind).
 
-**Listing card:** name as the heading and link, then summary, category, region and cost as text (not colour alone), then phone and email if present. The external link follows the rules in section 5.
+**Listing card:** name as the heading and link, then summary, category, region and "Free" (if ticked) as text (not colour alone), then phone and email if present. The external link follows the rules in section 5.
 
 ---
 
