@@ -1,0 +1,73 @@
+---
+/*
+  StarCluster: a loose group of starbursts and sparkles, hand placed so
+  they don't look like a grid. Decoration only (hidden from screen readers).
+  Never put one behind text (AGENTS.md, section 5).
+
+  Size and place it with a class (it fills its box). Colours come from
+  --star-1, --star-2 and --star-3, set on the class.
+
+  Props:
+    layout  (optional) "a" (the default) or "b": two different arrangements.
+    class   (optional) A class for sizing, placing and colours.
+*/
+import Starburst from './Starburst.astro';
+
+interface Props {
+  layout?: 'a' | 'b';
+  class?: string;
+}
+
+const { layout = 'a', class: className, ...rest } = Astro.props;
+
+// x, y and size are percentages of the cluster's box; turn is degrees
+type Star = { shape: 'sparkle' | 'atomic'; x: number; y: number; size: number; turn: number; colour: 1 | 2 | 3 };
+const layouts: Record<'a' | 'b', Star[]> = {
+  a: [
+    { shape: 'atomic', x: 4, y: 12, size: 40, turn: 8, colour: 1 },
+    { shape: 'sparkle', x: 56, y: 2, size: 20, turn: 0, colour: 2 },
+    { shape: 'sparkle', x: 66, y: 50, size: 30, turn: 12, colour: 1 },
+    { shape: 'atomic', x: 40, y: 62, size: 20, turn: 20, colour: 3 },
+    { shape: 'sparkle', x: 18, y: 78, size: 12, turn: 0, colour: 2 },
+    { shape: 'sparkle', x: 88, y: 18, size: 9, turn: 0, colour: 3 },
+    { shape: 'sparkle', x: 46, y: 36, size: 7, turn: 0, colour: 2 },
+  ],
+  b: [
+    { shape: 'sparkle', x: 0, y: 30, size: 26, turn: -10, colour: 2 },
+    { shape: 'atomic', x: 38, y: 0, size: 34, turn: 15, colour: 1 },
+    { shape: 'sparkle', x: 74, y: 30, size: 16, turn: 0, colour: 3 },
+    { shape: 'atomic', x: 58, y: 64, size: 28, turn: 0, colour: 2 },
+    { shape: 'sparkle', x: 28, y: 70, size: 14, turn: 20, colour: 1 },
+    { shape: 'sparkle', x: 90, y: 4, size: 8, turn: 0, colour: 1 },
+    { shape: 'sparkle', x: 10, y: 4, size: 8, turn: 0, colour: 3 },
+  ],
+};
+---
+
+<span {...rest} class:list={['star-cluster', className]} aria-hidden="true">
+  {
+    layouts[layout].map(({ shape, x, y, size, turn, colour }) => (
+      <span
+        class="star-cluster__star"
+        style={`left:${x}%;top:${y}%;width:${size}%;transform:rotate(${turn}deg);color:var(--star-${colour});`}
+      >
+        <Starburst shape={shape} />
+      </span>
+    ))
+  }
+</span>
+
+<style>
+  .star-cluster {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    aspect-ratio: 1;
+    pointer-events: none;
+  }
+
+  .star-cluster__star {
+    position: absolute;
+    display: block;
+  }
+</style>
