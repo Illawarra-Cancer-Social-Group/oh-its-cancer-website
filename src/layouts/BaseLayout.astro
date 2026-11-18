@@ -26,6 +26,8 @@
 import '../styles/global.css';
 import SkipLink from '../components/SkipLink.astro';
 import SiteNav from '../components/SiteNav.astro';
+import Starburst from '../components/Starburst.astro';
+import { NAV_ITEMS } from '../navigation';
 
 interface Props {
   title: string;
@@ -60,10 +62,19 @@ const year = new Date().getFullYear();
 
     <header class="site-header surface-dark">
       <div class="container site-header__inner">
-        <!-- The site title is real text, not an image (AGENTS.md, section 5) -->
-        <a class="site-title" href="/">{siteName}</a>
+        <!-- The site title is real text, not an image (AGENTS.md, section 5),
+             styled like the marquee: "Oh Shit!" and "Now What?" in script -->
+        <a class="site-title" href="/">
+          <Starburst class="site-title__star" shape="atomic" />
+          <span class="site-title__words">
+            <span class="site-title__script site-title__oh">Oh Shit!</span>
+            <span class="site-title__main">It’s Cancer.</span>
+            <span class="site-title__script site-title__now">Now What?</span>
+          </span>
+        </a>
         <SiteNav />
       </div>
+      <div class="bulb-strip"></div>
     </header>
 
     <!-- No width limit here: section pages paint their colour edge to edge.
@@ -73,8 +84,32 @@ const year = new Date().getFullYear();
     </main>
 
     <footer class="site-footer surface-dark">
-      <div class="container">
-        <p>© {year} Illawarra Cancer Social Group</p>
+      <div class="bulb-strip"></div>
+      <div class="container site-footer__inner">
+        <div class="site-footer__signoff">
+          <Starburst class="site-footer__star" />
+          <p class="site-footer__chookas">Chookas!</p>
+          <p>Theatre slang for “good luck”.</p>
+        </div>
+
+        <!-- The same menu as the header, with the theatre names -->
+        <nav class="site-footer__nav" aria-label="Footer">
+          <ul>
+            {
+              NAV_ITEMS.map((item) => (
+                <li>
+                  <a href={item.href}>
+                    {item.label}
+                    {item.theatreName && <span class="site-footer__theatre">{item.theatreName}</span>}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <p class="site-footer__copyright">© {year} Illawarra Cancer Social Group</p>
+        <Starburst class="site-footer__atomic" shape="atomic" />
       </div>
     </footer>
   </body>
@@ -95,22 +130,143 @@ const year = new Date().getFullYear();
     align-items: center;
     justify-content: space-between;
     gap: var(--space-xs) var(--space-xl);
-    padding-block: var(--space-s);
+    padding-block: var(--space-m);
   }
 
+  /* ---------- Site title, styled like a small marquee ---------- */
   .site-title {
     display: inline-flex;
     align-items: center;
+    gap: var(--space-s);
     min-height: var(--tap-target-min);
     color: var(--colour-text-on-dark);
-    font-family: var(--font-display);
-    font-size: var(--text-h3);
-    font-weight: 400; /* Curve Retro has one weight; bold would be faked */
     text-decoration: none;
   }
 
-  .site-title:hover {
+  .site-title__star {
+    width: 2.75rem;
+    color: var(--colour-mustard);
+  }
+
+  .site-title__words {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+
+  .site-title__main {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.25rem);
+    font-weight: 400; /* Curve Retro has one weight; bold would be faked */
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  /* Script words at 24px or more count as large text */
+  .site-title__script {
+    font-family: var(--font-script);
+    font-size: 1.5rem;
+  }
+
+  /* Pink on night: approved pair 8.20:1 */
+  .site-title__oh {
+    color: var(--colour-pink);
+    transform: rotate(-4deg);
+    transform-origin: left;
+  }
+
+  /* Mustard on night: approved pair 8.89:1 */
+  .site-title__now {
+    align-self: flex-end;
+    color: var(--colour-mustard);
+  }
+
+  .site-title:hover .site-title__main {
     text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
+  }
+
+  /* ---------- Footer ---------- */
+  .site-footer__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    align-items: start;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl);
+  }
+
+  .site-footer p {
+    margin: 0;
+  }
+
+  .site-footer__signoff {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: var(--space-s);
+  }
+
+  .site-footer__star {
+    grid-row: span 2;
+    width: 3rem;
+    color: var(--colour-butter);
+  }
+
+  /* Mustard on night: approved pair 8.89:1 */
+  .site-footer__chookas {
+    color: var(--colour-mustard);
+    font-family: var(--font-script);
+    font-size: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+    line-height: 1.1;
+  }
+
+  .site-footer__nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__nav a {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-xs);
+    min-height: var(--tap-target-min);
+    padding-block: var(--space-2xs);
+    color: var(--colour-text-on-dark);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .site-footer__nav a:hover {
+    text-decoration: underline;
+  }
+
+  /* Butter on night: approved pair */
+  .site-footer__theatre {
+    color: var(--colour-butter);
+    font-weight: 400;
+  }
+
+  .site-footer__copyright {
+    align-self: end;
+  }
+
+  .site-footer__atomic {
+    position: absolute;
+    right: var(--page-gutter);
+    top: var(--space-xl);
+    width: 4rem;
+    color: var(--colour-pink);
+    opacity: 0.8;
+  }
+
+  @media (max-width: 48rem) {
+    .site-footer__atomic {
+      display: none;
+    }
   }
 
   /* Keeps the footer at the bottom of the window on short pages */
@@ -130,13 +286,5 @@ const year = new Date().getFullYear();
   /* No outline when the skip link moves focus here: main is a landing spot, not a control */
   main:focus {
     outline: none;
-  }
-
-  .site-footer {
-    padding-block: var(--space-xl);
-  }
-
-  .site-footer p {
-    margin: 0;
   }
 </style>

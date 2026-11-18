@@ -3,11 +3,11 @@
   SiteNav: the main menu in the header.
 
   Shows the plain label of every item in src/navigation.ts, in capitals
-  with a line between them, as in the mock-up. Theatre names appear on
-  the pages themselves, not in the menu.
+  with a small mustard diamond between them. Theatre names appear on
+  the pages themselves and in the footer, not in this menu.
 
   The page you're on is marked with aria-current="page" (for screen
-  readers) and a thick mustard underline (for everyone else), so it
+  readers) and a red ticket shape behind it (for everyone else), so it
   doesn't rely on colour alone.
 
   On small screens the items wrap onto more lines. No JavaScript, no
@@ -62,9 +62,8 @@ const currentPath = normalise(Astro.url.pathname);
     gap: 0 var(--space-l);
   }
 
-  /* Wider screens: everything fits on one line, so add the thin line between
-     items from the mock-up. It's decoration only, drawn with CSS rather than
-     typed into the text, so screen readers don't read it out. */
+  /* Wider screens: everything fits on one line, so add a small diamond
+     between items. Decoration only, drawn with CSS so screen readers skip it. */
   @media (min-width: 48rem) {
     .site-nav__list {
       gap: 0;
@@ -73,10 +72,11 @@ const currentPath = normalise(Astro.url.pathname);
     .site-nav__item + .site-nav__item::before {
       content: '';
       display: inline-block;
-      width: 2px;
-      height: 1.1em;
-      margin-inline: var(--space-s);
-      background-color: currentColor;
+      width: 0.45rem;
+      height: 0.45rem;
+      margin-inline: var(--space-xs);
+      background-color: var(--colour-mustard);
+      transform: rotate(45deg);
     }
   }
 
@@ -91,9 +91,8 @@ const currentPath = normalise(Astro.url.pathname);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     text-decoration: none;
-    /* Equal borders top and bottom keep the text centred; the bottom one
-       turns mustard on the current page */
-    border-block: 4px solid transparent;
+    padding-inline: var(--space-s);
+    border-radius: var(--radius);
   }
 
   .site-nav__link:hover {
@@ -102,8 +101,12 @@ const currentPath = normalise(Astro.url.pathname);
     text-underline-offset: 0.25em;
   }
 
-  /* The page you're on: mustard on night, approved pair 8.89:1 */
+  /* The page you're on: a red ticket with warm white text, approved pair 4.81:1.
+     The notches at each end make it a shape, not just a colour change. */
   .site-nav__link[aria-current='page'] {
-    border-bottom-color: var(--colour-mustard);
+    background:
+      radial-gradient(circle at 0 50%, var(--colour-night) 0.35rem, transparent 0.4rem),
+      radial-gradient(circle at 100% 50%, var(--colour-night) 0.35rem, transparent 0.4rem),
+      var(--colour-red);
   }
 </style>
