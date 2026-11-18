@@ -1,0 +1,136 @@
+/*
+  Global styles: the base look for every page.
+  Colours, sizes and spacing come from tokens.css. Don't add hex colours here.
+*/
+
+@import './tokens.css';
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Stops phones from resizing text on their own when rotated */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--line-height-body);
+  color: var(--colour-text);
+  background-color: var(--colour-background);
+  /* Long words and web addresses wrap instead of causing sideways scrolling */
+  overflow-wrap: break-word;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- Text ---------- */
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--line-height-heading);
+  margin-block: var(--space-xl) var(--space-m);
+}
+
+h1 {
+  font-size: var(--text-h1);
+}
+h2 {
+  font-size: var(--text-h2);
+}
+h3 {
+  font-size: var(--text-h3);
+}
+h4 {
+  font-size: var(--text-h4);
+}
+
+p,
+li {
+  max-width: var(--measure);
+}
+
+p {
+  margin-block: 0 var(--space-m);
+}
+
+small {
+  font-size: var(--text-small);
+}
+
+a {
+  color: var(--colour-link);
+  /* Links are underlined so they don't rely on colour alone */
+  text-decoration: underline;
+  text-decoration-thickness: 0.1em;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 0.2em;
+}
+
+/* ---------- Focus ---------- */
+/*
+  A clear outline on everything you can reach with the keyboard.
+  Never remove this without a visible replacement (AGENTS.md, section 5).
+  Inside dark areas (night, maroon, red), add class="surface-dark" to the
+  container so the outline switches to warm white.
+*/
+:focus-visible {
+  outline: var(--focus-width) solid var(--colour-focus-on-light);
+  outline-offset: var(--focus-offset);
+}
+
+.surface-dark :focus-visible {
+  outline-color: var(--colour-focus-on-dark);
+}
+
+/* ---------- Helpers ---------- */
+
+/* Hides text visually but keeps it for screen readers, e.g. "(external site)" */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Centres content and adds side padding */
+.container {
+  width: 100%;
+  max-width: var(--page-max-width);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+/* ---------- Reduced motion ---------- */
+/* When someone turns on "reduce motion" on their device, all animation stops. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

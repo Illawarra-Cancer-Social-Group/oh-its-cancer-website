@@ -1,0 +1,7 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  // Tests and the Playwright config run in Node, not in the site.
+  // Playwright compiles and runs them itself, so "astro check" leaves them out.
+  "exclude": ["dist", "tests", "playwright.config.ts"]
+}

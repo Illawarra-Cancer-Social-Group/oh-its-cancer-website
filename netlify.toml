@@ -1,0 +1,20 @@
+# Netlify build settings. These live here, not in the Netlify dashboard,
+# so the repo is the single source of truth (AGENTS.md, section 11).
+
+[build]
+  # npm ci installs the exact versions in package-lock.json, never newer ones.
+  command = "npm ci && npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Must match .nvmrc and "engines" in package.json.
+  NODE_VERSION = "26.13.1"
+
+# Basic security headers for every page.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

@@ -1,0 +1,21 @@
+# Build output
+dist/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Test output
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Local environment files (secrets never go in the repo)
+.env
+.env.*
+
+# Netlify local folder
+.netlify/
+
+# Mac files
+.DS_Store
