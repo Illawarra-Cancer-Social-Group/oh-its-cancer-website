@@ -9,7 +9,7 @@
   The same rules are in .pages.yml, so Pages CMS guides Erin while she
   types. Keep the two files in sync (AGENTS.md, section 7).
 
-  Region and cost options are fixed. Ask Abby before changing them.
+  Region options are fixed. Ask Abby before changing them.
 */
 import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
@@ -18,7 +18,6 @@ import { z } from 'astro/zod';
 // ---------- Fixed options ----------
 export const SECTIONS = ['products', 'people', 'connect'] as const;
 export const REGIONS = ['Illawarra', 'NSW', 'national', 'online'] as const;
-export const COSTS = ['free', 'paid', 'varies'] as const;
 
 // ---------- Helpers ----------
 
@@ -135,9 +134,9 @@ const listings = defineCollection({
           error: `Region must be one of: ${REGIONS.join(', ')}.`,
         }),
 
-        cost: z.enum(COSTS, {
-          error: `Cost must be one of: ${COSTS.join(', ')}.`,
-        }),
+        // Ticked = free, shown as "Free" on the site. Unticked or left out
+        // = not marked as free (paid, or we don't know).
+        free: z.boolean({ error: 'Free must be ticked or unticked.' }).default(false),
 
         phone: z.preprocess(
           emptyToUndefined,
