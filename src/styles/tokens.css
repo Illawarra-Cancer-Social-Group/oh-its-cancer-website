@@ -35,12 +35,14 @@
   --focus-offset: 3px;
 
   /* ---------- Fonts ---------- */
-  /* [TODO: Abby to confirm display/marquee font name and web licence. Self-host it.] */
-  --font-display: Georgia, 'Times New Roman', serif;
-  /* [TODO: Abby to confirm script font name and web licence. Large headings and decorative words only.] */
-  --font-script: Georgia, 'Times New Roman', serif;
-  /* [TODO: Abby to confirm body font. Must be a clear sans-serif where I, l and 1 are easy to tell apart.] */
-  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  /* The font files and their licences are set up in fonts.css. The names
+     after the first are fallbacks, used until the font loads. */
+  /* Display / marquee: large headings only. May be swapped for a paid font later. */
+  --font-display: 'Federo', Georgia, 'Times New Roman', serif;
+  /* Script: large headings and decorative words only. Never body text, links, buttons, labels or navigation. */
+  --font-script: 'Yellowtail', 'Brush Script MT', cursive;
+  /* Body: everything else. Made for low vision readers (I, l and 1 are easy to tell apart). */
+  --font-body: 'Atkinson Hyperlegible Next', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 
   /* ---------- Type sizes ---------- */
   /* rem sizes grow when someone sets a larger default text size in their browser */

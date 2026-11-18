@@ -210,9 +210,10 @@ Must reach 3:1 against the background it sits on:
 - Red: warm white outline (mustard fails at 2.84:1)
 
 ### Typography
-- Display / marquee font: `[TODO: Abby to confirm name and web licence]`
-- Script font: `[TODO: Abby to confirm name and web licence]`
-- Body font: `[TODO: Abby to confirm]`. Must be a clear sans-serif with distinct letter shapes (I, l, 1 easy to tell apart).
+- Display / marquee font: **Federo** (SIL Open Font License). One weight, no italic. May be swapped for a paid font later; check its web licence first.
+- Script font: **Yellowtail** (Apache License 2.0).
+- Body font: **Atkinson Hyperlegible Next** (SIL Open Font License), weights 200 to 800 with italics. A clear sans-serif with distinct letter shapes (I, l, 1 easy to tell apart).
+- Font files and their licences are in `public/fonts/`. The `@font-face` rules are in `src/styles/fonts.css`.
 - Fonts must be free for web use or properly licensed. Self-host them; no external font calls.
 
 ---
