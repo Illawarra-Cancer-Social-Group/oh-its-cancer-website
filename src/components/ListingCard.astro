@@ -20,6 +20,7 @@
 */
 import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
+import { REGION_LABELS } from '../content.config';
 
 interface Props {
   listing: CollectionEntry<'listings'>['data'];
@@ -27,14 +28,6 @@ interface Props {
 }
 
 const { listing, categoryName } = Astro.props;
-
-// How each region reads on the site
-const regionLabels: Record<string, string> = {
-  Illawarra: 'Illawarra',
-  NSW: 'NSW',
-  national: 'Australia-wide',
-  online: 'Online',
-};
 
 // tel: links work best with only digits and +, e.g. "02 4200 0000" becomes "0242000000"
 const telHref = listing.phone ? `tel:${listing.phone.replace(/[^0-9+]/g, '')}` : undefined;
@@ -79,7 +72,7 @@ const telHref = listing.phone ? `tel:${listing.phone.replace(/[^0-9+]/g, '')}` :
     </div>
     <div>
       <dt>Region:</dt>
-      <dd>{regionLabels[listing.region] ?? listing.region}</dd>
+      <dd>{REGION_LABELS[listing.region]}</dd>
     </div>
     {
       listing.free && (

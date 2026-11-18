@@ -19,6 +19,14 @@ import { z } from 'astro/zod';
 export const SECTIONS = ['products', 'people', 'connect'] as const;
 export const REGIONS = ['Illawarra', 'NSW', 'national', 'online'] as const;
 
+// How each region reads on the site (listing cards and the region filter)
+export const REGION_LABELS: Record<(typeof REGIONS)[number], string> = {
+  Illawarra: 'Illawarra',
+  NSW: 'NSW',
+  national: 'Australia-wide',
+  online: 'Online',
+};
+
 // ---------- Helpers ----------
 
 /** Counts words, e.g. "Free wigs for women" is 4 words. */
