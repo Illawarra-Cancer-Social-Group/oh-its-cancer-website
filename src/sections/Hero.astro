@@ -11,13 +11,17 @@
   text, so no text sits on the busy picture. The bulbs are a still,
   dotted border: nothing flashes.
 
-  The drive-in and the woman are decoration (alt=""): the title says it all.
+  The drive-in, the screen with its explosion, and the woman are
+  decoration (alt=""): the title says it all. The screen only shows on
+  wider screens, standing on the horizon in the middle.
 
   Props: none.
 */
 import { Image } from 'astro:assets';
 import driveIn from '../assets/home/drive-in.jpg';
 import woman from '../assets/home/screaming-woman.png';
+import screen from '../assets/home/drive-in-screen.png';
+import explosion from '../assets/illustrations/explosion.png';
 ---
 
 <section class="hero surface-dark">
@@ -30,6 +34,11 @@ import woman from '../assets/home/screaming-woman.png';
     loading="eager"
     fetchpriority="high"
   />
+
+  <div class="hero__screen">
+    <Image class="hero__screen-frame" src={screen} alt="" widths={[400, 800]} sizes="20vw" />
+    <Image class="hero__explosion" src={explosion} alt="" widths={[300, 600]} sizes="12vw" />
+  </div>
 
   <div class="container hero__inner">
     <h1 class="marquee">
@@ -145,6 +154,40 @@ import woman from '../assets/home/screaming-woman.png';
     font-family: var(--font-script);
     font-size: clamp(1.75rem, 5vw, 2.5rem);
     transform: rotate(-2deg);
+  }
+
+  /* ---------- The drive-in screen (wider screens only) ---------- */
+  .hero__screen {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    /* The picture is anchored to the bottom, so the horizon sits 24% of the
+       picture's height above the bottom edge. The picture is at least as tall
+       as the hero, and at least two-thirds of its width (16vw is 24% of that).
+       The 2.5vw takes off the empty space under the screen's legs. */
+    .hero__screen {
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: calc(max(24%, 16vw) - 2.5vw);
+      width: 18vw;
+      transform: translateX(-50%);
+    }
+
+    .hero__screen-frame {
+      width: 100%;
+    }
+
+    /* Sits on the white part of the screen */
+    .hero__explosion {
+      position: absolute;
+      left: 22%;
+      top: 20%;
+      width: 56%;
+      height: 42%;
+      object-fit: contain;
+    }
   }
 
   /* ---------- The woman ---------- */

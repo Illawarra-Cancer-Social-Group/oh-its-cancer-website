@@ -8,13 +8,14 @@
   card names match the menu. Labels, theatre names and colours come from
   src/navigation.ts.
 
-  The coloured top of each card is waiting for its illustration
-  (microphone, zombie hand, masks, notepad).
+  The coloured top of each card shows its illustration (decoration only,
+  alt="").
 
   Sits on a dark (maroon) background, so focus outlines are warm white.
 
   Props: none.
 */
+import { Image } from 'astro:assets';
 import { NAV_ITEMS } from '../navigation';
 
 const cards = NAV_ITEMS.filter((item) => item.href !== '/');
@@ -26,7 +27,11 @@ const cards = NAV_ITEMS.filter((item) => item.href !== '/');
       cards.map((item) => (
         <li>
           <a class="card" href={item.href} style={`--card-colour: var(--colour-${item.colour});`}>
-            <span class="card__art" aria-hidden="true" />
+            <span class="card__art">
+              {item.illustration && (
+                <Image class="card__img" src={item.illustration} alt="" widths={[200, 400]} sizes="8rem" />
+              )}
+            </span>
             <span class="card__text">
               <span class="card__label">{item.label}</span>
               {item.theatreName && <span class="card__theatre">{item.theatreName}</span>}
@@ -74,9 +79,19 @@ const cards = NAV_ITEMS.filter((item) => item.href !== '/');
   }
 
   .card__art {
-    display: block;
-    min-height: 9rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 10rem;
+    padding-block-start: var(--space-m);
     background-color: var(--card-colour);
+  }
+
+  .card__img {
+    width: auto;
+    max-width: 80%;
+    max-height: 100%;
+    object-fit: contain;
   }
 
   .card__text {
