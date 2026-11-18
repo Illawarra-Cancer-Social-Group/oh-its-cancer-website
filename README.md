@@ -5,6 +5,8 @@
 ## For Erin
 
 - **Changing content** (listings, text, images): use Pages CMS. You don't need to touch the code.
+  - **Sign in to Pages CMS with your email address, not the GitHub button.** The site's safety rules only let Pages CMS save changes when you sign in by email. If you sign in with GitHub, saving fails with an error about pull requests.
+  - After any change to the Pages CMS form itself (a field added or removed), wait a few minutes, then close and reopen Pages CMS before editing. Until then it can still show the old form.
 - **Changing code** (new sections, features, design): use an AI tool on a branch, check the Netlify preview on your phone, then merge the pull request.
 - **Something broke?** In Netlify, open Deploys, pick the last working deploy and choose "Publish deploy".
 
