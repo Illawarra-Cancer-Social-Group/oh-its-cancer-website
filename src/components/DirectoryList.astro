@@ -1,0 +1,77 @@
+---
+/*
+  DirectoryList: every published listing in one site section, grouped
+  under its category headings.
+
+  This is the version that works without JavaScript: every published
+  listing is in the page, nothing hidden (AGENTS.md, section 7).
+  Search and filters will be added on top of it later.
+
+  - Categories show in their "order" number, then A to Z.
+  - Listings show A to Z within each category.
+  - Unpublished listings never appear.
+  - A category with no published listings isn't shown.
+
+  Props:
+    section  (required) "products", "people" or "connect".
+*/
+import { getCollection } from 'astro:content';
+import ListingCard from './ListingCard.astro';
+
+interface Props {
+  section: 'products' | 'people' | 'connect';
+}
+
+const { section } = Astro.props;
+
+const categories = (await getCollection('categories', ({ data }) => data.section === section)).sort(
+  (a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name, 'en-AU'),
+);
+
+const listings = await getCollection('listings', ({ data }) => data.published);
+
+const groups = categories
+  .map((category) => ({
+    category,
+    listings: listings
+      .filter((listing) => listing.data.category.id === category.id)
+      .sort((a, b) => a.data.name.localeCompare(b.data.name, 'en-AU')),
+  }))
+  .filter((group) => group.listings.length > 0);
+---
+
+{
+  groups.length === 0 ? (
+    <p class="directory__empty">There are no listings here yet. Please check back soon.</p>
+  ) : (
+    groups.map(({ category, listings }) => (
+      <section class="directory__group" aria-labelledby={`category-${category.id}`}>
+        <h2 id={`category-${category.id}`}>{category.data.name}</h2>
+        {category.data.description && <p>{category.data.description}</p>}
+        <ul class="directory__list">
+          {listings.map((listing) => (
+            <li>
+              <ListingCard listing={listing.data} categoryName={category.data.name} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  )
+}
+
+<style>
+  .directory__list {
+    display: grid;
+    /* As many columns as fit, each at least 20rem wide; one column on phones */
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: var(--space-l);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .directory__list li {
+    max-width: none;
+  }
+</style>

@@ -1,0 +1,88 @@
+---
+/*
+  SiteNav: the main menu in the header.
+
+  Shows every item from src/navigation.ts: the plain label large, with
+  the theatre name smaller underneath. The page you're on is marked with
+  aria-current="page" (for screen readers) and a thick underline (for
+  everyone else), so it doesn't rely on colour.
+
+  On small screens the items wrap onto more lines. No JavaScript, no
+  hidden menu to open.
+
+  Props: none.
+*/
+import { NAV_ITEMS } from '../navigation';
+
+// "/products" and "/products/" are the same page
+const normalise = (path: string) => (path.endsWith('/') ? path : `${path}/`);
+const currentPath = normalise(Astro.url.pathname);
+---
+
+<nav class="site-nav" aria-label="Main">
+  <ul class="site-nav__list">
+    {
+      NAV_ITEMS.map((item) => (
+        <li>
+          <a
+            class="site-nav__link"
+            href={item.href}
+            aria-current={normalise(item.href) === currentPath ? 'page' : undefined}
+          >
+            <span class="site-nav__label">{item.label}</span>
+            {item.theatreName && <span class="site-nav__theatre">{item.theatreName}</span>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .site-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-l);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-nav__link {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--tap-target-min);
+    min-width: var(--tap-target-min);
+    padding-block: var(--space-xs);
+    color: var(--colour-text-on-dark);
+    text-decoration: none;
+    line-height: 1.25;
+    /* Space for the underline that marks the current page */
+    border-bottom: 4px solid transparent;
+  }
+
+  /* Plain label: warm white on night, approved pair 15.05:1 */
+  .site-nav__label {
+    font-size: var(--text-h4);
+    font-weight: 700;
+  }
+
+  /* Theatre name: mustard on night, approved pair 8.89:1 */
+  .site-nav__theatre {
+    color: var(--colour-mustard);
+    font-family: var(--font-display);
+    font-style: italic;
+  }
+
+  .site-nav__link:hover .site-nav__label {
+    text-decoration: underline;
+    text-decoration-thickness: 0.1em;
+    text-underline-offset: 0.2em;
+  }
+
+  /* The page you're on */
+  .site-nav__link[aria-current='page'] {
+    border-bottom-color: var(--colour-mustard);
+  }
+</style>

@@ -1,0 +1,182 @@
+---
+/*
+  ListingCard: one directory listing.
+
+  Shows, in order (AGENTS.md, section 7):
+  - the name, as a heading and a link to the organisation's website
+  - the logo, if there is one
+  - the summary
+  - category, region and "Free" (if ticked), as words, not colour
+  - phone (a tel: link) and email (a mailto: link), if filled in
+
+  The website link opens in the same tab. It has an icon and hidden text
+  "(external site)" so screen reader users know they're leaving (section 5).
+  Only the name is a link to the website, so the phone and email links
+  aren't nested inside another link.
+
+  Props:
+    listing       (required) The listing's details from src/content/listings/.
+    categoryName  (required) The name of the listing's category.
+*/
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  listing: CollectionEntry<'listings'>['data'];
+  categoryName: string;
+}
+
+const { listing, categoryName } = Astro.props;
+
+// How each region reads on the site
+const regionLabels: Record<string, string> = {
+  Illawarra: 'Illawarra',
+  NSW: 'NSW',
+  national: 'Australia-wide',
+  online: 'Online',
+};
+
+// tel: links work best with only digits and +, e.g. "02 4200 0000" becomes "0242000000"
+const telHref = listing.phone ? `tel:${listing.phone.replace(/[^0-9+]/g, '')}` : undefined;
+---
+
+<article class="listing-card">
+  <h3 class="listing-card__name">
+    <a href={listing.url}>
+      {listing.name.trim()}
+      <svg
+        class="listing-card__external-icon"
+        aria-hidden="true"
+        focusable="false"
+        viewBox="0 0 24 24"
+        width="20"
+        height="20"
+      >
+        <path
+          d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"></path>
+      </svg>
+      <span class="visually-hidden">(external site)</span>
+    </a>
+  </h3>
+
+  {
+    listing.logo && listing.logoAlt && (
+      <Image class="listing-card__logo" src={listing.logo} alt={listing.logoAlt} width={160} />
+    )
+  }
+
+  <p class="listing-card__summary">{listing.summary}</p>
+
+  <dl class="listing-card__details">
+    <div>
+      <dt>Category:</dt>
+      <dd>{categoryName}</dd>
+    </div>
+    <div>
+      <dt>Region:</dt>
+      <dd>{regionLabels[listing.region] ?? listing.region}</dd>
+    </div>
+    {
+      listing.free && (
+        <div>
+          <dt>Cost:</dt>
+          <dd>Free</dd>
+        </div>
+      )
+    }
+  </dl>
+
+  {
+    (listing.phone || listing.email) && (
+      <ul class="listing-card__contact">
+        {listing.phone && (
+          <li>
+            Phone: <a href={telHref}>{listing.phone}</a>
+          </li>
+        )}
+        {listing.email && (
+          <li>
+            Email: <a href={`mailto:${listing.email}`}>{listing.email}</a>
+          </li>
+        )}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  /* Black on butter: approved pair 16.22:1. Focus outlines stay black (light background) */
+  .listing-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    height: 100%;
+    padding: var(--space-l);
+    background-color: var(--colour-butter);
+    color: var(--colour-black);
+    border: 2px solid var(--colour-black);
+    border-radius: var(--radius);
+  }
+
+  .listing-card__name {
+    margin: 0;
+    font-size: var(--text-h3);
+  }
+
+  .listing-card__name a {
+    display: inline;
+    color: var(--colour-black);
+  }
+
+  .listing-card__external-icon {
+    display: inline-block;
+    vertical-align: -0.1em;
+    margin-inline-start: var(--space-2xs);
+  }
+
+  .listing-card__logo {
+    max-height: 5rem;
+    width: auto;
+  }
+
+  .listing-card__summary {
+    margin: 0;
+  }
+
+  .listing-card__details {
+    margin: 0;
+  }
+
+  .listing-card__details div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .listing-card__details dt {
+    font-weight: 700;
+  }
+
+  .listing-card__details dd {
+    margin: 0;
+  }
+
+  .listing-card__contact {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Phone and email links: tall enough to tap easily */
+  .listing-card__contact a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target-min);
+    color: var(--colour-black);
+  }
+</style>

@@ -20,6 +20,7 @@
 */
 import '../styles/global.css';
 import SkipLink from '../components/SkipLink.astro';
+import SiteNav from '../components/SiteNav.astro';
 
 interface Props {
   title: string;
@@ -48,7 +49,7 @@ const year = new Date().getFullYear();
       <div class="container site-header__inner">
         <!-- The site title is real text, not an image (AGENTS.md, section 5) -->
         <a class="site-title" href="/">{siteName}</a>
-        <!-- Navigation goes here once the pages exist (AGENTS.md, section 8) -->
+        <SiteNav />
       </div>
     </header>
 
@@ -73,6 +74,9 @@ const year = new Date().getFullYear();
   }
 
   .site-header__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
     padding-block: var(--space-m);
   }
 
