@@ -1,21 +1,28 @@
 ---
 /*
-  Home page (placeholder).
-  Exists so the accessibility tests have a page to check.
-  The real home page (hero, section cards, Synopsis intro) comes later.
+  Home page, from the "Now Showing" mock-up: the drive-in hero, the
+  Chookas! banner, cards for each section, then the Synopsis.
 */
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../sections/Hero.astro';
+import ChookasBanner from '../sections/ChookasBanner.astro';
+import SectionCards from '../sections/SectionCards.astro';
+import Synopsis from '../sections/Synopsis.astro';
 ---
 
 <BaseLayout title="Home">
-  <div class="container home">
-    <h1>Oh Shit! It’s Cancer. Now What?</h1>
-    <p>[PLACEHOLDER: home page content]</p>
+  <Hero />
+  <div class="home-sections surface-dark">
+    <ChookasBanner />
+    <SectionCards />
+    <Synopsis />
   </div>
 </BaseLayout>
 
 <style>
-  .home {
-    padding-block: var(--space-xl) var(--space-3xl);
+  /* Maroon background below the hero, as in the mock-up */
+  .home-sections {
+    flex: 1;
+    background-color: var(--colour-maroon);
   }
 </style>

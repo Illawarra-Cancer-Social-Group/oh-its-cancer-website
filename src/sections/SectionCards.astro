@@ -1,0 +1,107 @@
+---
+/*
+  SectionCards: the four cards on the home page linking to About us,
+  Products, People and Connect, from the mock-up.
+
+  Each whole card is one link (AGENTS.md, section 5). The plain label is
+  large and the theatre name small, the reverse of the mock-up, so the
+  card names match the menu. Labels, theatre names and colours come from
+  src/navigation.ts.
+
+  The coloured top of each card is waiting for its illustration
+  (microphone, zombie hand, masks, notepad).
+
+  Sits on a dark (maroon) background, so focus outlines are warm white.
+
+  Props: none.
+*/
+import { NAV_ITEMS } from '../navigation';
+
+const cards = NAV_ITEMS.filter((item) => item.href !== '/');
+---
+
+<div class="container">
+  <ul class="cards">
+    {
+      cards.map((item) => (
+        <li>
+          <a class="card" href={item.href} style={`--card-colour: var(--colour-${item.colour});`}>
+            <span class="card__art" aria-hidden="true" />
+            <span class="card__text">
+              <span class="card__label">{item.label}</span>
+              {item.theatreName && <span class="card__theatre">{item.theatreName}</span>}
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: var(--space-xl);
+    margin: 0;
+    padding: var(--space-xl) var(--space-s) var(--space-2xl);
+    list-style: none;
+  }
+
+  .cards li {
+    max-width: none;
+  }
+
+  /* A slight, still tilt like the mock-up, alternating left and right */
+  .cards li:nth-child(odd) .card {
+    transform: rotate(-1.5deg);
+  }
+  .cards li:nth-child(even) .card {
+    transform: rotate(1.5deg);
+  }
+
+  /* Black on warm white: approved pair 18.47:1 */
+  .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--colour-warm-white);
+    color: var(--colour-black);
+    text-decoration: none;
+    border-radius: 0.375rem;
+    box-shadow: 0.6rem 0.6rem 0 var(--colour-black);
+    overflow: hidden;
+  }
+
+  .card__art {
+    display: block;
+    min-height: 9rem;
+    background-color: var(--card-colour);
+  }
+
+  .card__text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: var(--space-l) var(--space-m) var(--space-xl);
+    text-align: center;
+  }
+
+  .card__label {
+    font-size: var(--text-h3);
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .card:hover .card__label {
+    text-decoration: underline;
+    text-decoration-thickness: 0.1em;
+    text-underline-offset: 0.2em;
+  }
+
+  .card__theatre {
+    font-family: var(--font-display);
+    font-size: var(--text-h4);
+  }
+</style>

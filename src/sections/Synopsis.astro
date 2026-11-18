@@ -1,0 +1,88 @@
+---
+/*
+  Synopsis: the welcome text on the home page, from Erin's draft wording
+  (DRAFT WORDING, "Front page", 8 November 2026).
+
+  The quote's credit needs checking before launch (AGENTS.md, section 8):
+  it says "Miriam Webster", but the dictionary is Merriam-Webster, and the
+  quote itself hasn't been checked against the source. It's flagged on the
+  page so it can't go live unnoticed.
+
+  Mustard text on maroon: approved pair 8.50:1.
+
+  Props: none.
+*/
+---
+
+<section class="synopsis container" aria-labelledby="synopsis-heading">
+  <h2 id="synopsis-heading" class="synopsis__heading">Synopsis</h2>
+
+  <p>
+    It’s Cancer website is your backstage pass to living through and after a cancer diagnosis –
+    filled with support, advice, tips and tricks, we hope to help ease the journey.
+  </p>
+  <p>
+    As cancer patients we are performing different scripts for different crowds, but all with the
+    same intent – getting through it the best we can.
+  </p>
+
+  <figure class="synopsis__quote">
+    <blockquote>
+      <p>
+        “The words, trouper and trooper can both be used to describe someone going through hardship
+        or difficulty. Trooper originates from the designation given to soldiers and police officers,
+        who are no strangers to difficult conditions in the line of duty. Whereas trouper originates
+        from one who is part of a theatre troupe and thus realizes the show must go on.”
+      </p>
+    </blockquote>
+    <figcaption>
+      – Miriam Webster Dictionary
+      [PLACEHOLDER: check this quote and its credit with Erin. The dictionary is spelt
+      Merriam-Webster.]
+    </figcaption>
+  </figure>
+
+  <p>
+    I believe as we don’t sign up for this, nor do we train for the battle – we reflect those who
+    improvise, perform different emotions for different scenes and go through the steps that is
+    everyday life. We are troupers and the show must go on.
+  </p>
+  <p>So, welcome to the troupe – we bloody wish you weren’t here, but pleased you found us.</p>
+  <p class="synopsis__signoff">Chookas!</p>
+</section>
+
+<style>
+  .synopsis {
+    padding-block: var(--space-xl) var(--space-3xl);
+    color: var(--colour-mustard);
+  }
+
+  .synopsis__heading {
+    margin-block: 0 var(--space-l);
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: clamp(3rem, 9vw, 5rem);
+    line-height: 1.1;
+    /* No red outline (as in the mock-up): against thin script letters it
+       puts mustard on red, a banned pair (2.84:1) */
+  }
+
+  .synopsis__quote {
+    margin: 0 0 var(--space-m);
+    padding-inline-start: var(--space-l);
+    border-inline-start: 4px solid var(--colour-mustard);
+  }
+
+  .synopsis__quote blockquote {
+    margin: 0;
+  }
+
+  .synopsis__quote figcaption {
+    max-width: var(--measure);
+  }
+
+  .synopsis__signoff {
+    font-family: var(--font-script);
+    font-size: var(--text-h2);
+  }
+</style>
