@@ -2,10 +2,13 @@
 /*
   SiteNav: the main menu in the header.
 
-  Shows every item from src/navigation.ts: the plain label large, with
-  the theatre name smaller underneath. The page you're on is marked with
-  aria-current="page" (for screen readers) and a thick underline (for
-  everyone else), so it doesn't rely on colour.
+  Shows the plain label of every item in src/navigation.ts, in capitals
+  with a line between them, as in the mock-up. Theatre names appear on
+  the pages themselves, not in the menu.
+
+  The page you're on is marked with aria-current="page" (for screen
+  readers) and a thick mustard underline (for everyone else), so it
+  doesn't rely on colour alone.
 
   On small screens the items wrap onto more lines. No JavaScript, no
   hidden menu to open.
@@ -23,14 +26,13 @@ const currentPath = normalise(Astro.url.pathname);
   <ul class="site-nav__list">
     {
       NAV_ITEMS.map((item) => (
-        <li>
+        <li class="site-nav__item">
           <a
             class="site-nav__link"
             href={item.href}
             aria-current={normalise(item.href) === currentPath ? 'page' : undefined}
           >
-            <span class="site-nav__label">{item.label}</span>
-            {item.theatreName && <span class="site-nav__theatre">{item.theatreName}</span>}
+            {item.label}
           </a>
         </li>
       ))
@@ -42,45 +44,65 @@ const currentPath = normalise(Astro.url.pathname);
   .site-nav__list {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2xs) var(--space-l);
+    align-items: center;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .site-nav__link {
+  .site-nav__item {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    align-items: center;
+    max-width: none;
+    color: var(--colour-text-on-dark);
+  }
+
+  /* Phones: items wrap, with space between them */
+  .site-nav__list {
+    gap: 0 var(--space-l);
+  }
+
+  /* Wider screens: everything fits on one line, so add the thin line between
+     items from the mock-up. It's decoration only, drawn with CSS rather than
+     typed into the text, so screen readers don't read it out. */
+  @media (min-width: 48rem) {
+    .site-nav__list {
+      gap: 0;
+    }
+
+    .site-nav__item + .site-nav__item::before {
+      content: '';
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      margin-inline: var(--space-s);
+      background-color: currentColor;
+    }
+  }
+
+  /* Warm white on night: approved pair 15.05:1. Short capitalised labels are fine (section 5) */
+  .site-nav__link {
+    display: inline-flex;
+    align-items: center;
     min-height: var(--tap-target-min);
     min-width: var(--tap-target-min);
-    padding-block: var(--space-xs);
     color: var(--colour-text-on-dark);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     text-decoration: none;
-    line-height: 1.25;
-    /* Space for the underline that marks the current page */
-    border-bottom: 4px solid transparent;
+    /* Equal borders top and bottom keep the text centred; the bottom one
+       turns mustard on the current page */
+    border-block: 4px solid transparent;
   }
 
-  /* Plain label: warm white on night, approved pair 15.05:1 */
-  .site-nav__label {
-    font-size: var(--text-h4);
-    font-weight: 700;
-  }
-
-  /* Theatre name: mustard on night, approved pair 8.89:1 */
-  .site-nav__theatre {
-    color: var(--colour-mustard);
-    font-family: var(--font-display);
-  }
-
-  .site-nav__link:hover .site-nav__label {
+  .site-nav__link:hover {
     text-decoration: underline;
     text-decoration-thickness: 0.1em;
-    text-underline-offset: 0.2em;
+    text-underline-offset: 0.25em;
   }
 
-  /* The page you're on */
+  /* The page you're on: mustard on night, approved pair 8.89:1 */
   .site-nav__link[aria-current='page'] {
     border-bottom-color: var(--colour-mustard);
   }

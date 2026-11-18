@@ -32,13 +32,18 @@ const emptyToUndefined = (value: unknown) =>
   value === '' || value === null ? undefined : value;
 
 /**
+ * Turns a category file name or path into the name Astro uses for it:
+ * "src/content/categories/Wigs And Hats.yml" becomes "wigs-and-hats".
+ * Astro lower-cases names and swaps spaces for dashes, so we do the same.
+ */
+const toId = (path: string) =>
+  path.split('/').pop()!.replace(/\.(ya?ml)$/i, '').trim().toLowerCase().replace(/\s+/g, '-');
+
+/**
  * Pages CMS may save a category link as a file name ("wigs.yml") or a
  * full path ("src/content/categories/wigs.yml"). The build needs just "wigs".
  */
-const toCategoryId = (value: unknown) =>
-  typeof value === 'string'
-    ? value.split('/').pop()!.replace(/\.(ya?ml)$/i, '')
-    : value;
+const toCategoryId = (value: unknown) => (typeof value === 'string' ? toId(value) : value);
 
 /**
  * Pages CMS saves uploaded logos as "/src/assets/logos/name.png".
@@ -59,11 +64,7 @@ const categoryFiles = import.meta.glob('./content/categories/*.{yml,yaml}', {
   query: '?raw',
   import: 'default',
 });
-const categoryIds = new Set(
-  Object.keys(categoryFiles).map((path) =>
-    path.split('/').pop()!.replace(/\.(ya?ml)$/i, '').toLowerCase(),
-  ),
-);
+const categoryIds = new Set(Object.keys(categoryFiles).map(toId));
 
 // ---------- Categories ----------
 const categories = defineCollection({
@@ -124,7 +125,7 @@ const listings = defineCollection({
           toCategoryId,
           z
             .string({ error: 'Every listing needs a category.' })
-            .refine((id) => categoryIds.has(id.toLowerCase()), {
+            .refine((id) => categoryIds.has(id), {
               error: 'This category doesn’t exist. Pick one from the list, or add the category first.',
             })
             .pipe(reference('categories')),

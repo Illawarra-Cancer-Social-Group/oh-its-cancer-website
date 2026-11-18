@@ -4,13 +4,11 @@
   Shows every published listing whose category is in this section,
   grouped by category. Listings and categories are edited in Pages CMS.
 */
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeading from '../components/PageHeading.astro';
+import SectionLayout from '../layouts/SectionLayout.astro';
 import DirectoryList from '../components/DirectoryList.astro';
 ---
 
-<BaseLayout title="People">
-  <PageHeading href="/people/" />
+<SectionLayout href="/people/">
   <p>[PLACEHOLDER: short introduction to the People page]</p>
   <DirectoryList section="people" />
-</BaseLayout>
+</SectionLayout>
