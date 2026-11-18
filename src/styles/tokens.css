@@ -1,0 +1,75 @@
+/*
+  Design tokens: colours, type and spacing for the whole site.
+
+  This is the ONLY file where colours are defined. Everywhere else uses
+  these variables, e.g. color: var(--colour-black);
+
+  Before using any text/background colour pair, check it's in the
+  "Approved text and background pairs" table in AGENTS.md, section 6.
+  Some pairs look fine but fail contrast (e.g. warm white on mint).
+*/
+
+:root {
+  /* ---------- Palette (AGENTS.md, section 6) ---------- */
+  --colour-red: #cc2d30; /* Buttons, accents, large headings. Never lighten: warm white on red only just passes */
+  --colour-mint: #9bdbc1; /* Card and banner backgrounds */
+  --colour-butter: #efe8ad; /* Card backgrounds */
+  --colour-green: #aadd96; /* Card backgrounds */
+  --colour-pink: #e8a5af; /* Card backgrounds */
+  --colour-maroon: #4f0000; /* Page background (sections) */
+  --colour-mustard: #ebb649; /* Text on maroon */
+  --colour-warm-white: #f8f4ed; /* Light background, text on dark. Use instead of pure white */
+  --colour-black: #0a0505; /* Default body text */
+  --colour-night: #0d1b4a; /* Hero sky, header, dark sections */
+
+  /* ---------- Roles: what each colour is used for ---------- */
+  --colour-text: var(--colour-black);
+  --colour-background: var(--colour-warm-white);
+  --colour-link: var(--colour-black);
+  --colour-text-on-dark: var(--colour-warm-white);
+
+  /* Focus outlines must reach 3:1 against the background they sit on */
+  --colour-focus-on-light: var(--colour-black); /* Warm white, pastels, mustard */
+  --colour-focus-on-dark: var(--colour-warm-white); /* Night, maroon, red */
+  --focus-width: 3px;
+  --focus-offset: 3px;
+
+  /* ---------- Fonts ---------- */
+  /* [TODO: Abby to confirm display/marquee font name and web licence. Self-host it.] */
+  --font-display: Georgia, 'Times New Roman', serif;
+  /* [TODO: Abby to confirm script font name and web licence. Large headings and decorative words only.] */
+  --font-script: Georgia, 'Times New Roman', serif;
+  /* [TODO: Abby to confirm body font. Must be a clear sans-serif where I, l and 1 are easy to tell apart.] */
+  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
+  /* ---------- Type sizes ---------- */
+  /* rem sizes grow when someone sets a larger default text size in their browser */
+  --text-body: 1.125rem; /* 18px: the smallest body text allowed */
+  --text-small: 1.125rem; /* Kept at 18px on purpose: no smaller text on this site */
+  --text-h4: 1.25rem;
+  --text-h3: 1.5rem;
+  --text-h2: clamp(1.75rem, 1.5rem + 1.25vw, 2.25rem);
+  --text-h1: clamp(2.25rem, 1.75rem + 2.5vw, 3.5rem);
+
+  --line-height-body: 1.6; /* At least 1.5 */
+  --line-height-heading: 1.2;
+  --measure: 70ch; /* Longest comfortable line length */
+
+  /* ---------- Spacing ---------- */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-s: 0.75rem;
+  --space-m: 1rem;
+  --space-l: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* Side padding on pages: stays comfortable from 320px phones to wide screens */
+  --page-gutter: clamp(1rem, 4vw, 2rem);
+  --page-max-width: 75rem;
+
+  /* ---------- Interaction ---------- */
+  --tap-target-min: 44px; /* Smallest size for anything you can tap or click */
+  --radius: 0.5rem;
+}

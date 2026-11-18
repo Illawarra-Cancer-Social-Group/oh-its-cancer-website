@@ -1,0 +1,41 @@
+---
+/*
+  SkipLink: the "Skip to content" link.
+
+  It must be the first thing you reach when pressing Tab on any page.
+  It stays hidden until it gets keyboard focus, then appears in the top
+  corner. Choosing it jumps past the header to the main content.
+
+  Props: none. It always points to <main id="main"> in BaseLayout.
+*/
+---
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: var(--space-xs);
+    left: var(--space-xs);
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target-min);
+    padding: var(--space-xs) var(--space-m);
+    /* Black on butter: approved pair, 16.22:1 */
+    background-color: var(--colour-butter);
+    color: var(--colour-black);
+    font-weight: 700;
+    border-radius: var(--radius);
+    /* Hidden off-screen until focused */
+    transform: translateY(-200%);
+  }
+
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    transform: none;
+    /* The outline sits inside the butter box, so it always shows against butter */
+    outline: var(--focus-width) solid var(--colour-focus-on-light);
+    outline-offset: calc(var(--focus-width) * -2);
+  }
+</style>

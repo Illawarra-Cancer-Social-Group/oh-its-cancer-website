@@ -1,0 +1,111 @@
+---
+/*
+  BaseLayout: the frame around every page.
+
+  It adds the page <head>, the skip link, the site header, the <main>
+  area and the footer. Every page should use this layout, so the header
+  and navigation stay the same everywhere.
+
+  Props:
+    title        (required) What this page is about, e.g. "About us".
+                 It's shown in the browser tab as "About us | Oh Shit! It's Cancer. Now What?".
+                 Every page needs a different title.
+    description  (optional) One sentence for search engines and link previews.
+
+  Usage:
+    <BaseLayout title="About us">
+      <h1>About us</h1>
+      ...
+    </BaseLayout>
+*/
+import '../styles/global.css';
+import SkipLink from '../components/SkipLink.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+const siteName = 'Oh Shit! It’s Cancer. Now What?';
+const pageTitle = `${title} | ${siteName}`;
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    {description && <meta name="description" content={description} />}
+  </head>
+  <body>
+    <SkipLink />
+
+    <header class="site-header surface-dark">
+      <div class="container site-header__inner">
+        <!-- The site title is real text, not an image (AGENTS.md, section 5) -->
+        <a class="site-title" href="/">{siteName}</a>
+        <!-- Navigation goes here once the pages exist (AGENTS.md, section 8) -->
+      </div>
+    </header>
+
+    <main id="main" tabindex="-1" class="container">
+      <slot />
+    </main>
+
+    <footer class="site-footer surface-dark">
+      <div class="container">
+        <p>© {year} Illawarra Cancer Social Group</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  /* Header and footer: warm white text on night, approved pair 15.05:1 */
+  .site-header,
+  .site-footer {
+    background-color: var(--colour-night);
+    color: var(--colour-text-on-dark);
+  }
+
+  .site-header__inner {
+    padding-block: var(--space-m);
+  }
+
+  .site-title {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap-target-min);
+    color: var(--colour-text-on-dark);
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .site-title:hover {
+    text-decoration: underline;
+  }
+
+  main {
+    display: block;
+    padding-block: var(--space-xl) var(--space-3xl);
+  }
+
+  /* No outline when the skip link moves focus here: main is a landing spot, not a control */
+  main:focus {
+    outline: none;
+  }
+
+  .site-footer {
+    padding-block: var(--space-xl);
+  }
+
+  .site-footer p {
+    margin: 0;
+  }
+</style>
