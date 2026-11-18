@@ -6,7 +6,8 @@
 */
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4321;
+// Not 4321 (the "npm run dev" port), so the tests never check a dev server by mistake
+const PORT = 4329;
 
 export default defineConfig({
   testDir: './tests',
@@ -30,6 +31,7 @@ export default defineConfig({
   webServer: {
     command: `npx astro preview --port ${PORT} --ignore-lock`,
     url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
+    // Always start a fresh server, so the tests check the build that just ran
+    reuseExistingServer: false,
   },
 });

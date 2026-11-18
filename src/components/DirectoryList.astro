@@ -24,11 +24,24 @@ interface Props {
 
 const { section } = Astro.props;
 
-const categories = (await getCollection('categories', ({ data }) => data.section === section)).sort(
-  (a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name, 'en-AU'),
-);
+const allCategories = await getCollection('categories');
+const categories = allCategories
+  .filter(({ data }) => data.section === section)
+  .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name, 'en-AU'));
 
 const listings = await getCollection('listings', ({ data }) => data.published);
+
+// Backstop: a published listing whose category can't be matched would
+// silently disappear from the site, so stop the build instead (AGENTS.md, section 7).
+const knownIds = new Set(allCategories.map((c) => c.id));
+for (const listing of listings) {
+  if (!knownIds.has(listing.data.category.id)) {
+    throw new Error(
+      `The listing "${listing.data.name}" (src/content/listings/${listing.id}.yml) points to a category ` +
+        `that can't be found. Pick its category again in Pages CMS.`,
+    );
+  }
+}
 
 const groups = categories
   .map((category) => ({
