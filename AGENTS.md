@@ -193,6 +193,7 @@ Use warm white instead of pure white everywhere, including button text.
 | Pink | Night | 8.20:1 | All text |
 | Pink | Maroon | 7.83:1 | All text |
 | Warm white | Red | 4.81:1 | All text and buttons. Only just passes: never lighten the red or darken the warm white |
+| Red | Warm white | 4.81:1 | All text (the same pair the other way round) |
 | Black | Red | 3.84:1 | Large text and icons only |
 | Red | Butter | 4.22:1 | Large text and icons only |
 | Red | Night | 3.13:1 | Large text and icons only |

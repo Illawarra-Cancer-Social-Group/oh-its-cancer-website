@@ -78,4 +78,14 @@
   /* ---------- Interaction ---------- */
   --tap-target-min: 44px; /* Smallest size for anything you can tap or click */
   --radius: 0.5rem;
+  --radius-l: 1.25rem; /* Big panels and signs */
+
+  /* ---------- Borders ---------- */
+  /* Thicker on bigger things, so borders stay in proportion across the site */
+  --border-xs: 2px; /* Form fields */
+  --border-s: 4px; /* Small boxes: listing cards, the filter bar */
+  --border-m: 6px; /* Cards and banners */
+  --border-l: clamp(0.5rem, 0.3rem + 0.6vw, 0.75rem); /* Page panels */
+  --border-xl: 0.9rem; /* Marquee signs */
+  --bulb: 0.4rem; /* Size of the light bulbs drawn on marquee borders */
 }

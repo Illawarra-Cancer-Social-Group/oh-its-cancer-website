@@ -1,19 +1,17 @@
 ---
 /*
-  SectionLayout: the page design for About us, Products, People and Connect,
-  following the page mock-ups.
+  SectionLayout: the page design for About us, Products, People and Connect.
 
-  - The whole page sits on the section's own pastel colour
-    (set in src/navigation.ts: About mint, Products butter, People pink,
-    Connect green).
-  - At the top: the plain label as a large heading, with the theatre name
-    smaller underneath (AGENTS.md, section 5). Black text: all four pastels
-    are approved with black (12.82:1 or more). White text on these would fail.
-  - The section's illustration on the right of the heading (speaker box,
-    monster hand, masks or notepad, set in src/navigation.ts). Decoration
-    only, so alt="".
-  - Below: a warm white panel with a thick black border holding the
-    page content.
+  - The page sits on the section's own pastel colour, with a faint retro
+    pattern (boomerangs, sparkles, atomic stars) in a slightly darker shade.
+    Colours are set in src/navigation.ts: About mint, Products butter,
+    People pink, Connect green.
+  - Text never sits on the pattern (AGENTS.md, section 5): the heading and
+    the content are each in their own solid warm white box.
+  - The heading box has the plain label large and the theatre name smaller
+    in red script (section 5).
+  - A cluster of starbursts and the section's illustration sit beside the
+    heading (speaker box, monster hand, masks or notepad). Decoration only.
 
   Props:
     href         (required) The page's address in src/navigation.ts, e.g. "/products/".
@@ -30,6 +28,7 @@
 */
 import { Image } from 'astro:assets';
 import BaseLayout from './BaseLayout.astro';
+import StarCluster from '../components/StarCluster.astro';
 import { navItem } from '../navigation';
 
 interface Props {
@@ -43,12 +42,13 @@ const { label, theatreName, colour = 'butter', illustration } = navItem(href);
 
 <BaseLayout title={label} description={description}>
   <div class="section-page" style={`--section-colour: var(--colour-${colour});`}>
-    <div class="container">
+    <div class="container section-page__inner">
       <div class="section-page__top">
         <div class="section-page__heading">
           <h1>{label}</h1>
           {theatreName && <p class="section-page__theatre">{theatreName}</p>}
         </div>
+        <StarCluster class="section-page__stars" />
         {
           illustration && (
             <Image
@@ -56,7 +56,7 @@ const { label, theatreName, colour = 'butter', illustration } = navItem(href);
               src={illustration}
               alt=""
               widths={[200, 400]}
-              sizes="9rem"
+              sizes="10rem"
             />
           )
         }
@@ -72,54 +72,98 @@ const { label, theatreName, colour = 'butter', illustration } = navItem(href);
 <style>
   /* Black text on the section pastel: approved pairs, 10.06:1 or more */
   .section-page {
+    position: relative;
     flex: 1; /* fills short pages down to the footer */
+    padding-block: var(--space-2xl) var(--space-3xl);
     background-color: var(--section-colour);
     color: var(--colour-black);
-    padding-block: var(--space-xl) var(--space-3xl);
+  }
+
+  /* The retro pattern, in a slightly darker shade of the section colour.
+     The pattern file only gives the shapes; the colour comes from here. */
+  .section-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: color-mix(in srgb, var(--section-colour) 85%, var(--colour-black));
+    mask: url('/patterns/retro.svg') 0 0 / 15rem repeat;
+    pointer-events: none;
+  }
+
+  .section-page__inner {
+    position: relative; /* sits above the pattern */
   }
 
   .section-page__top {
     display: flex;
     align-items: flex-end;
-    justify-content: space-between;
     gap: var(--space-l);
     margin-block-end: var(--space-l);
+  }
+
+  /* ---------- Heading box ---------- */
+  /* Warm white box, black text: approved pair 18.47:1 */
+  .section-page__heading {
+    padding: var(--space-m) var(--space-xl) var(--space-l);
+    background-color: var(--colour-warm-white);
+    border: var(--border-m) solid var(--colour-black);
+    border-radius: var(--radius-l);
+    box-shadow: 0.5rem 0.5rem 0 var(--colour-black);
+    transform: rotate(-1.5deg);
   }
 
   .section-page__heading h1 {
     margin: 0;
     font-family: var(--font-display);
+    font-size: clamp(2.5rem, 1.75rem + 3.5vw, 4.5rem);
     font-weight: 400; /* Curve Retro has one weight; bold would be faked */
     line-height: 1;
   }
 
+  /* Red script on warm white: 4.81:1, the approved warm white / red pair */
   .section-page__theatre {
     margin: var(--space-2xs) 0 0;
-    font-weight: 700;
+    padding-inline-start: var(--space-l);
+    color: var(--colour-red);
+    font-family: var(--font-script);
+    font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+    line-height: 1.1;
   }
 
-  /* Illustrations sit beside the heading and touch the top of the panel,
-     as in the mock-ups. Hidden on narrow screens to keep the content close. */
+  /* ---------- Stars and illustration ---------- */
+  .section-page__stars {
+    align-self: flex-start;
+    width: clamp(6rem, 12vw, 9rem);
+    --star-1: var(--colour-black);
+    --star-2: var(--colour-red);
+    --star-3: var(--colour-warm-white);
+  }
+
+  /* The illustration touches the top of the content panel */
   .section-page__illustration {
     flex-shrink: 0;
     width: auto;
-    height: clamp(6rem, 18vw, 10rem);
+    height: clamp(7rem, 18vw, 11rem);
+    margin-inline-start: auto;
     margin-block-end: calc(var(--space-l) * -1);
   }
 
-  @media (max-width: 30rem) {
+  /* Phones: the heading box gets the full width */
+  @media (max-width: 40rem) {
+    .section-page__stars,
     .section-page__illustration {
       display: none;
     }
   }
 
+  /* ---------- Content panel ---------- */
   /* Warm white panel, black text: approved pair 18.47:1 */
   .section-page__panel {
-    position: relative;
     padding: clamp(var(--space-l), 4vw, var(--space-2xl));
     background-color: var(--colour-warm-white);
-    border: 6px solid var(--colour-black);
-    border-radius: var(--radius);
+    border: var(--border-l) solid var(--colour-black);
+    border-radius: var(--radius-l);
+    box-shadow: 0.75rem 0.75rem 0 var(--colour-black);
   }
 
   /* The first heading inside the panel doesn't need space above it */

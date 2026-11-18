@@ -26,6 +26,8 @@
 import '../styles/global.css';
 import SkipLink from '../components/SkipLink.astro';
 import SiteNav from '../components/SiteNav.astro';
+import StarCluster from '../components/StarCluster.astro';
+import { NAV_ITEMS } from '../navigation';
 
 interface Props {
   title: string;
@@ -60,10 +62,17 @@ const year = new Date().getFullYear();
 
     <header class="site-header surface-dark">
       <div class="container site-header__inner">
-        <!-- The site title is real text, not an image (AGENTS.md, section 5) -->
-        <a class="site-title" href="/">{siteName}</a>
+        <!-- The site title is real text, not an image (AGENTS.md, section 5),
+             on a small marquee sign that hangs over the row of bulbs -->
+        <a class="site-title marquee-frame" href="/">
+          <span class="site-title__script site-title__oh">Oh Shit!</span>
+          <span class="site-title__main">It’s Cancer.</span>
+          <span class="site-title__script site-title__now">Now What?</span>
+        </a>
+        <StarCluster class="site-header__stars" />
         <SiteNav />
       </div>
+      <div class="bulb-strip"></div>
     </header>
 
     <!-- No width limit here: section pages paint their colour edge to edge.
@@ -73,7 +82,33 @@ const year = new Date().getFullYear();
     </main>
 
     <footer class="site-footer surface-dark">
-      <div class="container">
+      <div class="bulb-strip"></div>
+      <div class="container site-footer__inner">
+        <div class="site-footer__signoff">
+          <p class="site-footer__chookas">Chookas!</p>
+          <p class="site-footer__meaning">Theatre slang for “good luck”.</p>
+          <StarCluster class="site-footer__stars" layout="b" />
+        </div>
+
+        <!-- The same menu as the header, with the theatre names -->
+        <nav class="site-footer__nav" aria-label="Footer">
+          <ul>
+            {
+              NAV_ITEMS.map((item) => (
+                <li>
+                  <a href={item.href}>
+                    {item.label}
+                    {item.theatreName && <span class="site-footer__theatre">{item.theatreName}</span>}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        <StarCluster class="site-footer__cluster" />
+      </div>
+      <div class="container site-footer__base">
         <p>© {year} Illawarra Cancer Social Group</p>
       </div>
     </footer>
@@ -93,24 +128,177 @@ const year = new Date().getFullYear();
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-xs) var(--space-xl);
-    padding-block: var(--space-s);
+    gap: var(--space-m) var(--space-l);
+    padding-block: var(--space-l);
   }
 
+  /* ---------- Site title: a small marquee sign ---------- */
+  /* Warm white on night inside a red frame with bulbs: approved pair 15.05:1 */
   .site-title {
+    --frame-width: var(--border-m);
+    position: relative;
+    z-index: 1;
     display: inline-flex;
-    align-items: center;
-    min-height: var(--tap-target-min);
+    flex-direction: column;
+    padding: var(--space-xs) var(--space-l) var(--space-s);
+    background-color: var(--colour-night);
     color: var(--colour-text-on-dark);
+    line-height: 1;
+    text-decoration: none;
+    transform: rotate(-2deg);
+    /* A warm glow from the bulbs, and a shadow for depth */
+    box-shadow:
+      0 0 1.5rem color-mix(in srgb, var(--colour-butter) 35%, transparent),
+      0.4rem 0.6rem 0 var(--colour-black);
+  }
+
+  .site-title__main {
     font-family: var(--font-display);
-    font-size: var(--text-h3);
+    font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
     font-weight: 400; /* Curve Retro has one weight; bold would be faked */
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  /* Script words at 24px or more count as large text */
+  .site-title__script {
+    font-family: var(--font-script);
+    font-size: 1.5rem;
+  }
+
+  /* Pink on night: approved pair 8.20:1 */
+  .site-title__oh {
+    color: var(--colour-pink);
+  }
+
+  /* Mustard on night: approved pair 8.89:1 */
+  .site-title__now {
+    align-self: flex-end;
+    color: var(--colour-mustard);
+  }
+
+  .site-title:hover .site-title__main {
+    text-decoration: underline;
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.12em;
+  }
+
+  .site-header__stars {
+    width: 5.5rem;
+    margin-inline-end: auto;
+    --star-1: var(--colour-mustard);
+    --star-2: var(--colour-butter);
+    --star-3: var(--colour-pink);
+  }
+
+  /* Wide screens: the sign hangs down over the row of bulbs */
+  @media (min-width: 64rem) {
+    .site-header__inner {
+      padding-block-end: 0;
+    }
+
+    .site-title {
+      margin-block-end: -2rem;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .site-header__stars {
+      display: none;
+    }
+  }
+
+  /* ---------- Footer ---------- */
+  .site-footer__inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    align-items: start;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl);
+  }
+
+  .site-footer p {
+    margin: 0;
+  }
+
+  .site-footer__signoff {
+    position: relative;
+  }
+
+  /* Mustard on night: approved pair 8.89:1 */
+  .site-footer__chookas {
+    color: var(--colour-mustard);
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 2rem + 2.5vw, 3.75rem);
+    line-height: 1;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  /* Butter on night: approved pair */
+  .site-footer__meaning {
+    margin-block-start: var(--space-xs) !important;
+    color: var(--colour-butter);
+    font-style: italic;
+  }
+
+  .site-footer__stars {
+    width: 6rem;
+    margin-block-start: var(--space-m);
+    --star-1: var(--colour-butter);
+    --star-2: var(--colour-mint);
+    --star-3: var(--colour-pink);
+  }
+
+  .site-footer__nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__nav a {
+    font-size: var(--text-h4);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-xs);
+    min-height: var(--tap-target-min);
+    padding-block: var(--space-2xs);
+    color: var(--colour-text-on-dark);
+    font-weight: 700;
     text-decoration: none;
   }
 
-  .site-title:hover {
+  .site-footer__nav a:hover {
     text-decoration: underline;
+  }
+
+  /* Butter on night: approved pair */
+  .site-footer__theatre {
+    color: var(--colour-butter);
+    font-weight: 400;
+  }
+
+  .site-footer__cluster {
+    justify-self: end;
+    width: 9rem;
+    --star-1: var(--colour-pink);
+    --star-2: var(--colour-mustard);
+    --star-3: var(--colour-mint);
+  }
+
+  /* The copyright sits apart in its own row: plainer and quieter than the rest.
+     It stays 18px, the smallest text allowed on the site (AGENTS.md, section 5). */
+  .site-footer__base {
+    padding-block: var(--space-m);
+    border-block-start: 1px solid color-mix(in srgb, var(--colour-warm-white) 30%, transparent);
+  }
+
+  @media (max-width: 48rem) {
+    .site-footer__cluster {
+      display: none;
+    }
   }
 
   /* Keeps the footer at the bottom of the window on short pages */
@@ -130,13 +318,5 @@ const year = new Date().getFullYear();
   /* No outline when the skip link moves focus here: main is a landing spot, not a control */
   main:focus {
     outline: none;
-  }
-
-  .site-footer {
-    padding-block: var(--space-xl);
-  }
-
-  .site-footer p {
-    margin: 0;
   }
 </style>

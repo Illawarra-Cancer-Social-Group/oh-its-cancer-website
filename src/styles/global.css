@@ -121,6 +121,40 @@ a:hover {
   border: 0 !important;
 }
 
+/* A row of glowing light bulbs on a red strip, like the edge of a marquee.
+   Decoration only: put it on an empty element. Still, never flashing. */
+.bulb-strip {
+  height: 1.25rem;
+  background:
+    radial-gradient(
+        circle,
+        var(--colour-butter) 0 0.22rem,
+        color-mix(in srgb, var(--colour-butter) 45%, transparent) 0.3rem,
+        transparent 0.5rem
+      )
+      0 50% / 1.25rem 1.25rem repeat-x,
+    var(--colour-red);
+}
+
+/* A marquee sign frame: a thick red border with a line of bulbs along it.
+   Change the border width with --frame-width. */
+.marquee-frame {
+  position: relative;
+  border: var(--frame-width, var(--border-l)) solid var(--colour-red);
+  border-radius: var(--radius-l);
+}
+
+.marquee-frame::before {
+  content: '';
+  position: absolute;
+  /* Puts the line of bulbs down the middle of the red border */
+  inset: calc((var(--frame-width, var(--border-l)) + var(--bulb)) / -2);
+  border: var(--bulb) dotted var(--colour-butter);
+  border-radius: var(--radius-l);
+  filter: drop-shadow(0 0 0.2rem var(--colour-butter));
+  pointer-events: none;
+}
+
 /* Centres content and adds side padding */
 .container {
   width: 100%;

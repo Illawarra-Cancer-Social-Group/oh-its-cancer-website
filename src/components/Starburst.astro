@@ -1,0 +1,54 @@
+---
+/*
+  Starburst: a 1950s star, used as decoration around the site.
+
+  Decoration only, so screen readers skip it (aria-hidden). It takes the
+  colour of the text around it (currentColor), or set "color" in a class.
+  Never put one behind text (AGENTS.md, section 5).
+
+  Props:
+    shape  (optional) "sparkle" (four curved points, the default) or
+           "atomic" (eight rays with dots on the ends).
+    class  (optional) A class for sizing and placing it.
+*/
+interface Props {
+  shape?: 'sparkle' | 'atomic';
+  class?: string;
+}
+
+// rest carries the parent's style scope, so the parent's class styles reach this svg
+const { shape = 'sparkle', class: className, ...rest } = Astro.props;
+
+// Eight rays, alternating long and short, each ending in a dot
+const rays = Array.from({ length: 8 }, (_, i) => {
+  const angle = (i * Math.PI) / 4;
+  const length = i % 2 === 0 ? 10.5 : 7;
+  return { x: 12 + Math.cos(angle) * length, y: 12 + Math.sin(angle) * length, r: i % 2 === 0 ? 1.3 : 1 };
+});
+---
+
+<svg {...rest} class:list={['starburst', className]} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  {
+    shape === 'sparkle' ? (
+      <path d="M12 0C13 9 15 11 24 12C15 13 13 15 12 24C11 15 9 13 0 12C9 11 11 9 12 0Z" fill="currentColor" />
+    ) : (
+      <g fill="currentColor" stroke="currentColor" stroke-width="0.8" stroke-linecap="round">
+        {rays.map(({ x, y, r }) => (
+          <>
+            <line x1="12" y1="12" x2={x} y2={y} />
+            <circle cx={x} cy={y} r={r} stroke="none" />
+          </>
+        ))}
+        <circle cx="12" cy="12" r="1.6" stroke="none" />
+      </g>
+    )
+  }
+</svg>
+
+<style>
+  .starburst {
+    display: block;
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+</style>
