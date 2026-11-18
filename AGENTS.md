@@ -210,7 +210,7 @@ Must reach 3:1 against the background it sits on:
 - Red: warm white outline (mustard fails at 2.84:1)
 
 ### Typography
-- Display / marquee font: **Federo** (SIL Open Font License). One weight, no italic. May be swapped for a paid font later; check its web licence first.
+- Display / marquee font: **Curve Retro** (Alit Design, paid). One weight. Not in the repo until a web licence is bought; until then the site falls back to **Fraunces** (SIL Open Font License).
 - Script font: **Yellowtail** (Apache License 2.0).
 - Body font: **Atkinson Hyperlegible Next** (SIL Open Font License), weights 200 to 800 with italics. A clear sans-serif with distinct letter shapes (I, l, 1 easy to tell apart).
 - Font files and their licences are in `public/fonts/`. The `@font-face` rules are in `src/styles/fonts.css`.
