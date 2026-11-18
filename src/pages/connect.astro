@@ -3,12 +3,22 @@
   Connect page (Rehearsals): directory listings for the "connect" section.
   Shows every published listing whose category is in this section,
   grouped by category. Listings and categories are edited in Pages CMS.
+  The introduction is Erin's draft wording ("Connection"), spelling fixed.
 */
 import SectionLayout from '../layouts/SectionLayout.astro';
 import DirectoryList from '../components/DirectoryList.astro';
 ---
 
 <SectionLayout href="/connect/">
-  <p>[PLACEHOLDER: short introduction to the Connect page]</p>
+  <p><strong>Connection is key!</strong></p>
+  <p>
+    It is difficult to express hard emotions of pain and suffering to those we love. It is difficult
+    to see the pain in their eyes, and feel like we are the reason for causing it.
+  </p>
+  <p>
+    But it is so important to talk and share the load. More hands make lighter loads. We highly
+    recommend speaking with professionals throughout your journey.
+  </p>
+  <p>Find local community groups below, join our conversations or start your own.</p>
   <DirectoryList section="connect" />
 </SectionLayout>
