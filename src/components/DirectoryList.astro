@@ -3,9 +3,11 @@
   DirectoryList: every published listing in one site section, grouped
   under its category headings.
 
-  This is the version that works without JavaScript: every published
-  listing is in the page, nothing hidden (AGENTS.md, section 7).
-  Search and filters will be added on top of it later.
+  Without JavaScript every published listing is in the page, nothing
+  hidden (AGENTS.md, section 7). With JavaScript a filter bar appears
+  above the list: search, category, region and "Free only". Filters are
+  saved in the web address, so results can be shared. Hidden listings use
+  the hidden attribute, and focus never moves when filters change.
 
   - Categories show in their "order" number, then A to Z.
   - Listings show A to Z within each category.
@@ -17,6 +19,7 @@
 */
 import { getCollection } from 'astro:content';
 import ListingCard from './ListingCard.astro';
+import { REGIONS, REGION_LABELS } from '../content.config';
 
 interface Props {
   section: 'products' | 'people' | 'connect';
@@ -57,23 +60,213 @@ const groups = categories
   groups.length === 0 ? (
     <p class="directory__empty">There are no listings here yet. Please check back soon.</p>
   ) : (
-    groups.map(({ category, listings }) => (
-      <section class="directory__group" aria-labelledby={`category-${category.id}`}>
-        <h2 id={`category-${category.id}`}>{category.data.name}</h2>
-        {category.data.description && <p>{category.data.description}</p>}
-        <ul class="directory__list">
-          {listings.map((listing) => (
-            <li>
-              <ListingCard listing={listing.data} categoryName={category.data.name} />
-            </li>
+    <div class="directory" data-directory>
+      {/* Shown by the script below; without JavaScript there's nothing to filter with */}
+      <form class="filters" role="search" aria-label="Filter listings" hidden>
+        <div class="filters__field">
+          <label for="filter-search">Search listings</label>
+          <input id="filter-search" name="q" type="search" autocomplete="off" />
+        </div>
+
+        <fieldset class="filters__field">
+          <legend>Category</legend>
+          {groups.map(({ category }) => (
+            <label class="filters__check">
+              <input type="checkbox" name="category" value={category.id} />
+              {category.data.name}
+            </label>
           ))}
-        </ul>
-      </section>
-    ))
+        </fieldset>
+
+        <div class="filters__field">
+          <label for="filter-region">Region</label>
+          <select id="filter-region" name="region">
+            <option value="">All regions</option>
+            {REGIONS.map((region) => <option value={region}>{REGION_LABELS[region]}</option>)}
+          </select>
+        </div>
+
+        <label class="filters__check">
+          <input type="checkbox" name="free" value="1" />
+          Free only
+        </label>
+
+        <button class="filters__clear" type="reset">Clear filters</button>
+      </form>
+
+      <p class="filters__count" aria-live="polite" data-count></p>
+      <p class="filters__none" hidden data-none>
+        No listings match your search or filters. Try different words, or clear the filters to see everything.
+      </p>
+
+      {groups.map(({ category, listings }) => (
+        <section class="directory__group" aria-labelledby={`category-${category.id}`} data-group>
+          <h2 id={`category-${category.id}`}>{category.data.name}</h2>
+          {category.data.description && <p>{category.data.description}</p>}
+          <ul class="directory__list">
+            {listings.map((listing) => (
+              <li
+                data-listing
+                data-text={`${listing.data.name} ${listing.data.summary} ${category.data.name}`.toLowerCase()}
+                data-category={category.id}
+                data-region={listing.data.region}
+                data-free={listing.data.free ? '1' : ''}
+              >
+                <ListingCard listing={listing.data} categoryName={category.data.name} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
   )
 }
 
+<script>
+  // Directory filters. Runs only with JavaScript; the full list works without it.
+  // shortcut: filters in the browser, fine under about 500 listings per section (AGENTS.md, section 7)
+  const directory = document.querySelector<HTMLElement>('[data-directory]');
+  if (directory) {
+    const form = directory.querySelector('form')!;
+    const count = directory.querySelector<HTMLElement>('[data-count]')!;
+    const none = directory.querySelector<HTMLElement>('[data-none]')!;
+    const listings = [...directory.querySelectorAll<HTMLElement>('[data-listing]')];
+    const groups = [...directory.querySelectorAll<HTMLElement>('[data-group]')];
+
+    // Fill the form from the web address, so shared links and the back button show the same results
+    function readAddress() {
+      const params = new URLSearchParams(location.search);
+      form.q.value = params.get('q') ?? '';
+      form.region.value = params.get('region') ?? '';
+      form.free.checked = params.get('free') === '1';
+      const categories = params.getAll('category');
+      for (const box of form.querySelectorAll<HTMLInputElement>('[name="category"]')) {
+        box.checked = categories.includes(box.value);
+      }
+    }
+
+    function applyFilters() {
+      const data = new FormData(form);
+      const words = String(data.get('q') ?? '').toLowerCase().split(/\s+/).filter(Boolean);
+      const categories = data.getAll('category');
+      const region = data.get('region');
+      const freeOnly = data.has('free');
+
+      let shown = 0;
+      for (const item of listings) {
+        const match =
+          words.every((word) => item.dataset.text!.includes(word)) &&
+          (categories.length === 0 || categories.includes(item.dataset.category!)) &&
+          (!region || item.dataset.region === region) &&
+          (!freeOnly || item.dataset.free === '1');
+        item.hidden = !match;
+        if (match) shown++;
+      }
+      for (const group of groups) {
+        group.hidden = !group.querySelector('[data-listing]:not([hidden])');
+      }
+      none.hidden = shown > 0;
+      count.textContent = `Showing ${shown} of ${listings.length} ${listings.length === 1 ? 'listing' : 'listings'}`;
+
+      // Save the filters in the web address (empty ones left out)
+      const params = new URLSearchParams();
+      for (const [key, value] of data) if (value) params.append(key, String(value));
+      const query = params.toString();
+      history.replaceState(null, '', query ? `?${query}` : location.pathname);
+    }
+
+    let timer: number | undefined;
+    form.addEventListener('input', (event) => {
+      clearTimeout(timer);
+      // Wait for a short pause in typing before searching; other filters apply at once
+      const delay = (event.target as HTMLElement).id === 'filter-search' ? 300 : 0;
+      timer = window.setTimeout(applyFilters, delay);
+    });
+    // The reset event fires before the form clears, so filter on the next tick
+    form.addEventListener('reset', () => setTimeout(applyFilters));
+    form.addEventListener('submit', (event) => event.preventDefault());
+
+    readAddress();
+    applyFilters();
+    form.hidden = false;
+  }
+</script>
+
 <style>
+  /* Filter bar: black text and borders on the warm white panel (18.47:1) */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--space-m) var(--space-xl);
+    margin-block-end: var(--space-m);
+    padding: var(--space-l);
+    border: 3px solid var(--colour-black);
+    border-radius: var(--radius);
+  }
+
+  .filters__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .filters label,
+  .filters legend {
+    font-weight: 700;
+  }
+
+  .filters input[type='search'],
+  .filters select {
+    min-height: var(--tap-target-min);
+    padding: var(--space-2xs) var(--space-xs);
+    font: inherit;
+    color: var(--colour-black);
+    background-color: var(--colour-warm-white);
+    border: 2px solid var(--colour-black);
+    border-radius: var(--radius);
+  }
+
+  .filters input[type='search'] {
+    width: min(100%, 20rem);
+  }
+
+  /* Checkbox labels: the whole label is the tap target, at least 44px tall */
+  .filters .filters__check {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-height: var(--tap-target-min);
+    font-weight: 400;
+  }
+
+  .filters input[type='checkbox'] {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0;
+    accent-color: var(--colour-black);
+  }
+
+  /* Warm white on red: approved pair 4.81:1 */
+  .filters__clear {
+    min-height: var(--tap-target-min);
+    padding: var(--space-xs) var(--space-l);
+    font: inherit;
+    font-weight: 700;
+    color: var(--colour-warm-white);
+    background-color: var(--colour-red);
+    border: 0;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  .filters__count {
+    font-weight: 700;
+  }
+
   .directory__list {
     display: grid;
     /* As many columns as fit, each at least 20rem wide; one column on phones */

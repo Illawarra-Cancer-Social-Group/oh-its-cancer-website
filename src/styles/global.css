@@ -103,6 +103,11 @@ a:hover {
 
 /* ---------- Helpers ---------- */
 
+/* The hidden attribute always wins, even over display: flex (used by the directory filters) */
+[hidden] {
+  display: none !important;
+}
+
 /* Hides text visually but keeps it for screen readers, e.g. "(external site)" */
 .visually-hidden {
   position: absolute !important;
