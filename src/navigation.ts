@@ -8,6 +8,12 @@
 
   To add a page to the menu, add it here and create the page in src/pages/.
 */
+import type { ImageMetadata } from 'astro';
+import speakerBox from './assets/illustrations/speaker-box.png';
+import monsterHand from './assets/illustrations/monster-hand.png';
+import masks from './assets/illustrations/masks.png';
+import notepad from './assets/illustrations/notepad.png';
+
 export interface NavItem {
   /** Plain label, shown large, e.g. "Products" */
   label: string;
@@ -20,14 +26,16 @@ export interface NavItem {
    * Only pastels that pass with black text: mint, butter, green or pink.
    */
   colour?: 'mint' | 'butter' | 'green' | 'pink';
+  /** Decorative picture for the page heading and the home page card */
+  illustration?: ImageMetadata;
 }
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', href: '/' },
-  { label: 'About us', theatreName: 'The Program', href: '/about/', colour: 'mint' },
-  { label: 'Products', theatreName: 'Costuming', href: '/products/', colour: 'butter' },
-  { label: 'People', theatreName: 'Props', href: '/people/', colour: 'pink' },
-  { label: 'Connect', theatreName: 'Rehearsals', href: '/connect/', colour: 'green' },
+  { label: 'About us', theatreName: 'The Program', href: '/about/', colour: 'mint', illustration: speakerBox },
+  { label: 'Products', theatreName: 'Costuming', href: '/products/', colour: 'butter', illustration: monsterHand },
+  { label: 'People', theatreName: 'Props', href: '/people/', colour: 'pink', illustration: masks },
+  { label: 'Connect', theatreName: 'Rehearsals', href: '/connect/', colour: 'green', illustration: notepad },
 ];
 
 /** Finds a menu item by its web address, e.g. navItem('/products/') */

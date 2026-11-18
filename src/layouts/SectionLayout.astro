@@ -9,8 +9,9 @@
   - At the top: the plain label as a large heading, with the theatre name
     smaller underneath (AGENTS.md, section 5). Black text: all four pastels
     are approved with black (12.82:1 or more). White text on these would fail.
-  - Space on the right of the heading for an illustration (the microphone,
-    zombie hand and so on), once the artwork files arrive.
+  - The section's illustration on the right of the heading (speaker box,
+    monster hand, masks or notepad, set in src/navigation.ts). Decoration
+    only, so alt="".
   - Below: a warm white panel with a thick black border holding the
     page content.
 
@@ -20,14 +21,14 @@
     description  (optional) One sentence for search engines and link previews.
 
   Slots:
-    default       The page content, shown inside the panel.
-    illustration  (optional) A decorative image beside the heading. Use alt="".
+    default  The page content, shown inside the panel.
 
   Usage:
     <SectionLayout href="/products/">
       <p>Intro text…</p>
     </SectionLayout>
 */
+import { Image } from 'astro:assets';
 import BaseLayout from './BaseLayout.astro';
 import { navItem } from '../navigation';
 
@@ -37,7 +38,7 @@ interface Props {
 }
 
 const { href, description } = Astro.props;
-const { label, theatreName, colour = 'butter' } = navItem(href);
+const { label, theatreName, colour = 'butter', illustration } = navItem(href);
 ---
 
 <BaseLayout title={label} description={description}>
@@ -49,10 +50,14 @@ const { label, theatreName, colour = 'butter' } = navItem(href);
           {theatreName && <p class="section-page__theatre">{theatreName}</p>}
         </div>
         {
-          Astro.slots.has('illustration') && (
-            <div class="section-page__illustration">
-              <slot name="illustration" />
-            </div>
+          illustration && (
+            <Image
+              class="section-page__illustration"
+              src={illustration}
+              alt=""
+              widths={[200, 400]}
+              sizes="9rem"
+            />
           )
         }
       </div>
@@ -67,6 +72,7 @@ const { label, theatreName, colour = 'butter' } = navItem(href);
 <style>
   /* Black text on the section pastel: approved pairs, 10.06:1 or more */
   .section-page {
+    flex: 1; /* fills short pages down to the footer */
     background-color: var(--section-colour);
     color: var(--colour-black);
     padding-block: var(--space-xl) var(--space-3xl);
@@ -96,7 +102,8 @@ const { label, theatreName, colour = 'butter' } = navItem(href);
      as in the mock-ups. Hidden on narrow screens to keep the content close. */
   .section-page__illustration {
     flex-shrink: 0;
-    width: clamp(5rem, 15vw, 9rem);
+    width: auto;
+    height: clamp(6rem, 18vw, 10rem);
     margin-block-end: calc(var(--space-l) * -1);
   }
 

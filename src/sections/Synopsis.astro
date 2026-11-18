@@ -1,0 +1,125 @@
+---
+/*
+  Synopsis: the welcome text on the home page, from Erin's draft wording
+  (DRAFT WORDING, "Front page", 8 November 2026), with the popcorn beside
+  the heading and the theatre picture alongside on wide screens.
+
+  The trouper/trooper passage is paraphrased from Merriam-Webster, not a
+  direct quote, so it has no quotation marks and is credited as paraphrased.
+
+  Mustard text on maroon: approved pair 8.50:1.
+  The popcorn and theatre are decoration (alt="").
+
+  Props: none.
+*/
+import { Image } from 'astro:assets';
+import popcorn from '../assets/illustrations/popcorn.png';
+import theatre from '../assets/illustrations/theatre-entry.jpg';
+---
+
+<section class="synopsis container" aria-labelledby="synopsis-heading">
+  <div class="synopsis__text">
+    <div class="synopsis__top">
+      <h2 id="synopsis-heading" class="synopsis__heading">Synopsis</h2>
+      <Image class="synopsis__popcorn" src={popcorn} alt="" widths={[200, 400]} sizes="10rem" />
+    </div>
+
+    <p>
+      It’s Cancer website is your backstage pass to living through and after a cancer diagnosis –
+      filled with support, advice, tips and tricks, we hope to help ease the journey.
+    </p>
+    <p>
+      As cancer patients we are performing different scripts for different crowds, but all with the
+      same intent – getting through it the best we can.
+    </p>
+
+    <div class="synopsis__paraphrase">
+      <p>
+        The words, trouper and trooper can both be used to describe someone going through hardship or
+        difficulty. Trooper originates from the designation given to soldiers and police officers, who
+        are no strangers to difficult conditions in the line of duty. Whereas trouper originates from
+        one who is part of a theatre troupe and thus realizes the show must go on.
+      </p>
+      <p class="synopsis__source">– Merriam-Webster Dictionary (paraphrased)</p>
+    </div>
+
+    <p>
+      I believe as we don’t sign up for this, nor do we train for the battle – we reflect those who
+      improvise, perform different emotions for different scenes and go through the steps that is
+      everyday life. We are troupers and the show must go on.
+    </p>
+    <p>So, welcome to the troupe – we bloody wish you weren’t here, but pleased you found us.</p>
+    <p class="synopsis__signoff">Chookas!</p>
+  </div>
+
+  <Image
+    class="synopsis__theatre"
+    src={theatre}
+    alt=""
+    widths={[400, 800, 1200]}
+    sizes="(min-width: 64rem) 30vw, 0px"
+  />
+</section>
+
+<style>
+  .synopsis {
+    display: grid;
+    gap: var(--space-2xl);
+    padding-block: var(--space-xl) var(--space-3xl);
+    color: var(--colour-mustard);
+  }
+
+  .synopsis__top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-l);
+    margin-block-end: var(--space-l);
+  }
+
+  .synopsis__heading {
+    margin: 0;
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: clamp(3rem, 9vw, 5rem);
+    line-height: 1.1;
+    /* No red outline (as in the mock-up): against thin script letters it
+       puts mustard on red, a banned pair (2.84:1) */
+  }
+
+  .synopsis__popcorn {
+    width: clamp(5rem, 15vw, 9rem);
+  }
+
+  .synopsis__paraphrase {
+    margin-block-end: var(--space-m);
+    padding-inline-start: var(--space-l);
+    border-inline-start: 4px solid var(--colour-mustard);
+  }
+
+  .synopsis__source {
+    margin: 0;
+  }
+
+  .synopsis__signoff {
+    font-family: var(--font-script);
+    font-size: var(--text-h2);
+  }
+
+  /* The theatre picture only shows when there's room beside the text */
+  .synopsis__theatre {
+    display: none;
+  }
+
+  @media (min-width: 64rem) {
+    .synopsis {
+      grid-template-columns: minmax(0, 70ch) minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .synopsis__theatre {
+      display: block;
+      width: 100%;
+      border-radius: var(--radius);
+    }
+  }
+</style>

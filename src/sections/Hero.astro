@@ -1,0 +1,215 @@
+---
+/*
+  Hero: the top of the home page, from the "Now Showing" mock-up.
+
+  A drive-in at dusk, with the site title on a marquee sign:
+  "Oh Shit!" on the red arrow, "It's Cancer" on the main sign and
+  "Now What?" on the small sign underneath.
+
+  The title is real text (the page's <h1>), not part of the picture
+  (AGENTS.md, section 5). Every sign has a solid night panel behind its
+  text, so no text sits on the busy picture. The bulbs are a still,
+  dotted border: nothing flashes.
+
+  The drive-in, the screen with its explosion, and the woman are
+  decoration (alt=""): the title says it all. The screen only shows on
+  wider screens, standing on the horizon in the middle.
+
+  Props: none.
+*/
+import { Image } from 'astro:assets';
+import driveIn from '../assets/home/drive-in.jpg';
+import woman from '../assets/home/screaming-woman.png';
+import screen from '../assets/home/drive-in-screen.png';
+import explosion from '../assets/illustrations/explosion.png';
+---
+
+<section class="hero surface-dark">
+  <Image
+    class="hero__background"
+    src={driveIn}
+    alt=""
+    widths={[800, 1400, 2400]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+  />
+
+  <div class="hero__screen">
+    <Image class="hero__screen-frame" src={screen} alt="" widths={[400, 800]} sizes="20vw" />
+    <Image class="hero__explosion" src={explosion} alt="" widths={[300, 600]} sizes="12vw" />
+  </div>
+
+  <div class="container hero__inner">
+    <h1 class="marquee">
+      <span class="marquee__arrow">Oh Shit!</span>
+      <span class="marquee__main">It’s Cancer<span class="visually-hidden">.</span></span>
+      <span class="marquee__small">Now What?</span>
+    </h1>
+  </div>
+
+  <Image
+    class="hero__woman"
+    src={woman}
+    alt=""
+    widths={[400, 800, 1200]}
+    sizes="(min-width: 48rem) 35vw, 60vw"
+  />
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: min(85vh, 48rem);
+    overflow: hidden;
+    background-color: var(--colour-night);
+  }
+
+  /* The picture fills the hero; the cars stay in view at the bottom */
+  .hero__background {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center bottom;
+  }
+
+  .hero__inner {
+    position: relative;
+    padding-block: var(--space-xl);
+  }
+
+  /* ---------- The marquee sign ---------- */
+  .marquee {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-s);
+    margin: 0;
+    max-width: 38rem;
+    color: var(--colour-warm-white);
+    font-weight: 400;
+    line-height: 1;
+    /* A slight tilt, like a roadside sign. Still, not animated */
+    transform: rotate(-2deg);
+  }
+
+  /* Red arrow: warm white on red, approved pair 4.81:1 (large text) */
+  .marquee__arrow {
+    padding: var(--space-xs) var(--space-3xl) var(--space-xs) var(--space-l);
+    background-color: var(--colour-red);
+    font-family: var(--font-script);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    clip-path: polygon(0 0, 82% 0, 82% -40%, 100% 50%, 82% 140%, 82% 100%, 0 100%);
+    margin-inline-start: var(--space-xl);
+  }
+
+  /* Main and small signs: warm white on night, approved pair 15.05:1.
+     Red frame with a dotted butter line inside for the bulbs. */
+  .marquee__main,
+  .marquee__small {
+    position: relative;
+    background-color: var(--colour-night);
+    border: 0.9rem solid var(--colour-red);
+    border-radius: 1.25rem;
+  }
+
+  .marquee__main::before,
+  .marquee__small::before {
+    content: '';
+    position: absolute;
+    inset: -0.65rem;
+    border: 0.4rem dotted var(--colour-butter);
+    border-radius: 1rem;
+    pointer-events: none;
+  }
+
+  .marquee__main {
+    padding: clamp(1.5rem, 5vw, 3rem) clamp(1.25rem, 5vw, 3.5rem);
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 9vw, 5.5rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* Wider screens: "IT'S CANCER" on one line, as in the mock-up.
+     Phones may wrap it, so nothing spills off the screen. */
+  @media (min-width: 48rem) {
+    .marquee {
+      max-width: none;
+    }
+
+    .marquee__main {
+      font-size: clamp(3rem, 6.5vw, 5.5rem);
+      white-space: nowrap;
+    }
+  }
+
+  .marquee__small {
+    margin-inline-start: clamp(1.5rem, 8vw, 5rem);
+    padding: var(--space-s) var(--space-xl);
+    font-family: var(--font-script);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    transform: rotate(-2deg);
+  }
+
+  /* ---------- The drive-in screen (wider screens only) ---------- */
+  .hero__screen {
+    display: none;
+  }
+
+  @media (min-width: 48rem) {
+    /* The picture is anchored to the bottom, so the horizon sits 24% of the
+       picture's height above the bottom edge. The picture is at least as tall
+       as the hero, and at least two-thirds of its width (16vw is 24% of that).
+       The 2.5vw takes off the empty space under the screen's legs. */
+    .hero__screen {
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: calc(max(24%, 16vw) - 2.5vw);
+      width: 18vw;
+      transform: translateX(-50%);
+    }
+
+    .hero__screen-frame {
+      width: 100%;
+    }
+
+    /* Sits on the white part of the screen */
+    .hero__explosion {
+      position: absolute;
+      left: 22%;
+      top: 20%;
+      width: 56%;
+      height: 42%;
+      object-fit: contain;
+    }
+  }
+
+  /* ---------- The woman ---------- */
+  /* Phones: below the sign, on the right */
+  .hero__woman {
+    position: relative;
+    align-self: flex-end;
+    width: min(60%, 18rem);
+    margin-block-start: auto;
+  }
+
+  /* Wider screens: bottom right corner, beside the sign */
+  @media (min-width: 48rem) {
+    .hero__woman {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: auto;
+      height: 85%;
+      max-width: 40%;
+      object-fit: contain;
+      object-position: right bottom;
+    }
+  }
+</style>

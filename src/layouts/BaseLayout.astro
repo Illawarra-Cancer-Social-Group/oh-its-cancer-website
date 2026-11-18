@@ -120,14 +120,10 @@ const year = new Date().getFullYear();
     min-height: 100vh;
   }
 
+  /* Pages give their last block flex: 1, so its colour reaches the footer */
   main {
     display: flex;
     flex-direction: column;
-    flex: 1;
-  }
-
-  /* The page's own content fills the space, so section colours reach the footer */
-  main > :global(*) {
     flex: 1;
   }
 
