@@ -1,0 +1,159 @@
+# Pages CMS settings: the fields Erin sees when editing content.
+#
+# The same rules are in src/content.config.ts, which the build checks.
+# Keep the two files in sync (AGENTS.md, section 7).
+# Region and cost options are fixed. Ask Abby before changing them.
+#
+# Kept deliberately simple, so switching to another git-based CMS
+# (e.g. Sveltia CMS) stays easy if Pages CMS ever disappears.
+
+media:
+  - name: logos
+    label: Logos
+    input: src/assets/logos
+    output: /src/assets/logos
+    rename: safe
+
+content:
+  # ---------- Categories ----------
+  - name: categories
+    label: Categories
+    type: collection
+    path: src/content/categories
+    format: yaml
+    filename: "{name}.yml"
+    view:
+      fields: [name, section, order]
+      primary: name
+      sort: [section, order, name]
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: name
+        label: Category name
+        description: Shown as the filter label and the heading above its listings.
+        type: string
+        required: true
+
+      - name: section
+        label: Site section
+        description: Which page this category's listings appear on.
+        type: select
+        required: true
+        options:
+          values: [products, people, connect]
+
+      - name: description
+        label: Description (optional)
+        description: One short sentence shown under the heading. 25 words or fewer.
+        type: text
+
+      - name: order
+        label: Order
+        description: Lower numbers show first within the section, e.g. 1, 2, 3.
+        type: number
+        required: true
+        options:
+          min: 0
+
+  # ---------- Listings ----------
+  - name: listings
+    label: Listings
+    type: collection
+    path: src/content/listings
+    format: yaml
+    filename: "{name}.yml"
+    view:
+      fields: [name, category, published, lastChecked]
+      primary: name
+      sort: [name, lastChecked]
+      default:
+        sort: name
+        order: asc
+    fields:
+      - name: name
+        label: Organisation or service name
+        type: string
+        required: true
+
+      - name: summary
+        label: Summary
+        description: What they offer, in plain language. 40 words or fewer.
+        type: text
+        required: true
+
+      - name: url
+        label: Web address
+        description: Must start with https://
+        type: string
+        required: true
+        pattern:
+          regex: "^https://\\S+$"
+          message: "The web address must start with https:// and have no spaces."
+
+      - name: category
+        label: Category
+        description: Can't find the right one? Add it under Categories first.
+        type: reference
+        required: true
+        options:
+          collection: categories
+          search: name
+          value: "{path}"
+          label: "{fields.name}"
+
+      - name: region
+        label: Region
+        description: Illawarra, NSW, national (Australia-wide) or online.
+        type: select
+        required: true
+        options:
+          values: [Illawarra, NSW, national, online]
+
+      - name: cost
+        label: Cost
+        type: select
+        required: true
+        options:
+          values: [free, paid, varies]
+
+      - name: phone
+        label: Phone (optional)
+        description: e.g. 02 4200 0000 or 1800 000 000
+        type: string
+        pattern:
+          regex: "^([0-9+()\\s-]{6,20})?$"
+          message: "Only numbers, spaces, +, ( ) and - please."
+
+      - name: email
+        label: Email (optional)
+        type: string
+        pattern:
+          regex: "^([^@\\s]+@[^@\\s]+\\.[^@\\s]+)?$"
+          message: "That doesn't look like an email address."
+
+      - name: logo
+        label: Logo (optional)
+        type: image
+        options:
+          media: logos
+
+      - name: logoAlt
+        label: Logo description
+        description: Needed if you add a logo. Usually just the organisation's name.
+        type: string
+
+      - name: published
+        label: Published
+        description: Untick to hide this listing from the site without deleting it.
+        type: boolean
+        default: true
+
+      - name: lastChecked
+        label: Details last checked
+        description: The date you last confirmed the web address and details are right.
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
