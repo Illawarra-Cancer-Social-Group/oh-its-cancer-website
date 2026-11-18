@@ -1,0 +1,122 @@
+---
+/*
+  SectionLayout: the page design for About us, Products, People and Connect,
+  following the page mock-ups.
+
+  - The whole page sits on the section's own pastel colour
+    (set in src/navigation.ts: About mint, Products butter, People pink,
+    Connect green).
+  - At the top: the plain label as a large heading, with the theatre name
+    smaller underneath (AGENTS.md, section 5). Black text: all four pastels
+    are approved with black (12.82:1 or more). White text on these would fail.
+  - Space on the right of the heading for an illustration (the microphone,
+    zombie hand and so on), once the artwork files arrive.
+  - Below: a warm white panel with a thick black border holding the
+    page content.
+
+  Props:
+    href         (required) The page's address in src/navigation.ts, e.g. "/products/".
+                 The heading, theatre name, colour and page title all come from there.
+    description  (optional) One sentence for search engines and link previews.
+
+  Slots:
+    default       The page content, shown inside the panel.
+    illustration  (optional) A decorative image beside the heading. Use alt="".
+
+  Usage:
+    <SectionLayout href="/products/">
+      <p>Intro text…</p>
+    </SectionLayout>
+*/
+import BaseLayout from './BaseLayout.astro';
+import { navItem } from '../navigation';
+
+interface Props {
+  href: string;
+  description?: string;
+}
+
+const { href, description } = Astro.props;
+const { label, theatreName, colour = 'butter' } = navItem(href);
+---
+
+<BaseLayout title={label} description={description}>
+  <div class="section-page" style={`--section-colour: var(--colour-${colour});`}>
+    <div class="container">
+      <div class="section-page__top">
+        <div class="section-page__heading">
+          <h1>{label}</h1>
+          {theatreName && <p class="section-page__theatre">{theatreName}</p>}
+        </div>
+        {
+          Astro.slots.has('illustration') && (
+            <div class="section-page__illustration">
+              <slot name="illustration" />
+            </div>
+          )
+        }
+      </div>
+
+      <div class="section-page__panel">
+        <slot />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Black text on the section pastel: approved pairs, 10.06:1 or more */
+  .section-page {
+    background-color: var(--section-colour);
+    color: var(--colour-black);
+    padding-block: var(--space-xl) var(--space-3xl);
+  }
+
+  .section-page__top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-l);
+    margin-block-end: var(--space-l);
+  }
+
+  .section-page__heading h1 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 400; /* Federo has one weight */
+    line-height: 1;
+  }
+
+  .section-page__theatre {
+    margin: var(--space-2xs) 0 0;
+    font-weight: 700;
+  }
+
+  /* Illustrations sit beside the heading and touch the top of the panel,
+     as in the mock-ups. Hidden on narrow screens to keep the content close. */
+  .section-page__illustration {
+    flex-shrink: 0;
+    width: clamp(5rem, 15vw, 9rem);
+    margin-block-end: calc(var(--space-l) * -1);
+  }
+
+  @media (max-width: 30rem) {
+    .section-page__illustration {
+      display: none;
+    }
+  }
+
+  /* Warm white panel, black text: approved pair 18.47:1 */
+  .section-page__panel {
+    position: relative;
+    padding: clamp(var(--space-l), 4vw, var(--space-2xl));
+    background-color: var(--colour-warm-white);
+    border: 6px solid var(--colour-black);
+    border-radius: var(--radius);
+  }
+
+  /* The first heading inside the panel doesn't need space above it */
+  .section-page__panel > :first-child {
+    margin-block-start: 0;
+  }
+</style>

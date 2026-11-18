@@ -110,16 +110,18 @@ const telHref = listing.phone ? `tel:${listing.phone.replace(/[^0-9+]/g, '')}` :
 </article>
 
 <style>
-  /* Black on butter: approved pair 16.22:1. Focus outlines stay black (light background) */
+  /* The card takes the page's section colour (set by SectionLayout), or butter.
+     Black on any of those pastels is an approved pair (10.06:1 or more).
+     Focus outlines stay black (light background). */
   .listing-card {
     display: flex;
     flex-direction: column;
     gap: var(--space-s);
     height: 100%;
     padding: var(--space-l);
-    background-color: var(--colour-butter);
+    background-color: var(--section-colour, var(--colour-butter));
     color: var(--colour-black);
-    border: 2px solid var(--colour-black);
+    border: 3px solid var(--colour-black);
     border-radius: var(--radius);
   }
 

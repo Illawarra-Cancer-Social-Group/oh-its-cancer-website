@@ -8,6 +8,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Home">
-  <h1>Oh Shit! It’s Cancer. Now What?</h1>
-  <p>[PLACEHOLDER: home page content]</p>
+  <div class="container home">
+    <h1>Oh Shit! It’s Cancer. Now What?</h1>
+    <p>[PLACEHOLDER: home page content]</p>
+  </div>
 </BaseLayout>
+
+<style>
+  .home {
+    padding-block: var(--space-xl) var(--space-3xl);
+  }
+</style>

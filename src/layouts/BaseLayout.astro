@@ -14,9 +14,14 @@
 
   Usage:
     <BaseLayout title="About us">
-      <h1>About us</h1>
-      ...
+      <div class="container">
+        <h1>About us</h1>
+        ...
+      </div>
     </BaseLayout>
+
+  Section pages (About us, Products, People, Connect) use SectionLayout,
+  which wraps this layout and adds the coloured band and content panel.
 */
 import '../styles/global.css';
 import SkipLink from '../components/SkipLink.astro';
@@ -61,7 +66,9 @@ const year = new Date().getFullYear();
       </div>
     </header>
 
-    <main id="main" tabindex="-1" class="container">
+    <!-- No width limit here: section pages paint their colour edge to edge.
+         Pages put their content inside class="container". -->
+    <main id="main" tabindex="-1">
       <slot />
     </main>
 
@@ -81,11 +88,14 @@ const year = new Date().getFullYear();
     color: var(--colour-text-on-dark);
   }
 
+  /* Title on the left, menu on the right; they stack when there isn't room */
   .site-header__inner {
     display: flex;
-    flex-direction: column;
-    gap: var(--space-s);
-    padding-block: var(--space-m);
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-xl);
+    padding-block: var(--space-s);
   }
 
   .site-title {
@@ -103,9 +113,22 @@ const year = new Date().getFullYear();
     text-decoration: underline;
   }
 
+  /* Keeps the footer at the bottom of the window on short pages */
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
   main {
-    display: block;
-    padding-block: var(--space-xl) var(--space-3xl);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  /* The page's own content fills the space, so section colours reach the footer */
+  main > :global(*) {
+    flex: 1;
   }
 
   /* No outline when the skip link moves focus here: main is a landing spot, not a control */
